@@ -36,7 +36,6 @@
     </div>
     <!-- Topbar End -->
 
-
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="{% url 'home' %}" class="navbar-brand p-0">
@@ -47,26 +46,25 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
-                <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
-                <a href="{% url 'service' %}" class="nav-item nav-link">Service</a>
+                <a href="{% url 'home' %}" class="nav-item nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+                <a href="{% url 'about' %}" class="nav-item nav-link {% if active_page == 'about' %}active{% endif %}">About</a>
+                <a href="{% url 'service' %}" class="nav-item nav-link {% if active_page == 'service' %}active{% endif %}">Service</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu m-0">
-                        <a href="{% url 'price' %}" class="dropdown-item">Pricing Plan</a>
-                        <a href="{% url 'team' %}" class="dropdown-item">Our Dentist</a>
-                        <a href="{% url 'testimonial' %}" class="dropdown-item">Testimonial</a>
-                        <a href="{% url 'appointment' %}" class="dropdown-item">Appointment</a>
+                        <a href="{% url 'price' %}" class="dropdown-item {% if active_page == 'price' %}active{% endif %}">Pricing Plan</a>
+                        <a href="{% url 'team' %}" class="dropdown-item {% if active_page == 'team' %}active{% endif %}">Our Dentist</a>
+                        <a href="{% url 'testimonial' %}" class="dropdown-item {% if active_page == 'testimonial' %}active{% endif %}">Testimonial</a>
+                        <a href="{% url 'appointment' %}" class="dropdown-item {% if active_page == 'appointment' %}active{% endif %}">Appointment</a>
                     </div>
                 </div>
-                <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                <a href="{% url 'contact' %}" class="nav-item nav-link {% if active_page == 'contact' %}active{% endif %}">Contact</a>
             </div>
             <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></button>
             <a href="{% url 'appointment' %}" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
         </div>
     </nav>
     <!-- Navbar End -->
-
 
     <!-- Full Screen Search Start -->
     <div class="modal fade" id="searchModal" tabindex="-1">

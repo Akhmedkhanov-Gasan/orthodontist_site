@@ -18,5 +18,6 @@ db.sqlite3
 *.pyo
 
 staticfiles/
+local/
 
 */migrations/*
