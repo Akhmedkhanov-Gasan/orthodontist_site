@@ -1,0 +1,23 @@
+# Операционная система
+*.DS_Store
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+
+venv/
+.env
+
+# Django
+*.sqlite3
+db.sqlite3
+*.pyc
+*.pyo
+
+staticfiles/
+static/
+
+*/migrations/*
