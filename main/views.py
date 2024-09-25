@@ -9,10 +9,6 @@ def about(request):
     return render(request, 'about.html', {'active_page': 'about'})
 
 
-def appointment(request):
-    return render(request, 'appointment.html', {'active_page': 'appointment'})
-
-
 def contact(request):
     return render(request, 'contact.html', {'active_page': 'contact'})
 
