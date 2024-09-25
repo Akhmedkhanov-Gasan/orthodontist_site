@@ -11,7 +11,12 @@ SECRET_KEY = 'django-insecure-i%kq1##&2p@i@ck42=_8)^%r(^&$y9+co2iulug9(+@&%k94#8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'orthodontist-site.onrender.com']
+ALLOWED_HOSTS = [
+    'https://orthodontist-site.onrender.com'
+    , 'localhost'
+    , '127.0.0.1'
+    , '0.0.0.0'
+]
 
 
 # Application definition
