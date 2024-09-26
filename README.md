@@ -75,6 +75,7 @@ To set up the project on your local machine, follow these steps:
 ├── Procfile                  # For deployment on services like Render
 └── README.md                 # This README file
 ```
+```
 
 ## License
 
