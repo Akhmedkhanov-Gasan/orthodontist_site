@@ -63,8 +63,7 @@ To set up the project on your local machine, follow these steps:
 
 ## Directory Structure
 
-```plaintext
-.
+
 ├── orthodontist_site/        # Django project folder
 ├── main/        			  # Main Django App
 ├── appointments/             # App for managing appointment bookings
@@ -74,7 +73,7 @@ To set up the project on your local machine, follow these steps:
 ├── manage.py                 # Django management script
 ├── Procfile                  # For deployment on services like Render
 └── README.md                 # This README file
-```
+
 ```
 
 ## License
