@@ -21,3 +21,6 @@ staticfiles/
 local/
 
 */migrations/*
+
+.vscode/
+*.code-workspace
