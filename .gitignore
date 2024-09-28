@@ -21,3 +21,5 @@ staticfiles/
 local/
 
 .idea/
+.vscode/
+*.code-workspace
