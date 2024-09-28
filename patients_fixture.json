@@ -1,0 +1,202 @@
+[
+    {
+        "model": "main.patient",
+        "pk": 1,
+        "fields": {
+            "full_name": "Ivan Petrov",
+            "sex": "M",
+            "age": 34,
+            "contact_info": "ivan.petrov@example.com",
+            "address": "123 Main St, Moscow",
+            "photos": null,
+            "general_info": "No major health issues.",
+            "treatment_type": "Orthodontic braces",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-01-10",
+            "last_visit_date": "2023-09-01",
+            "next_visit_date": "2023-10-10",
+            "notes": "Adjustments needed every two months.",
+            "cost_of_treatment": "15000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 2,
+        "fields": {
+            "full_name": "Anna Ivanova",
+            "sex": "F",
+            "age": 28,
+            "contact_info": "anna.ivanova@example.com",
+            "address": "456 Oak Ave, St. Petersburg",
+            "photos": null,
+            "general_info": "Mild tooth misalignment.",
+            "treatment_type": "Invisalign",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-02-15",
+            "last_visit_date": "2023-09-05",
+            "next_visit_date": "2023-10-20",
+            "notes": "Good progress, aligners changed every two weeks.",
+            "cost_of_treatment": "20000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 3,
+        "fields": {
+            "full_name": "Sergey Smirnov",
+            "sex": "M",
+            "age": 45,
+            "contact_info": "sergey.smirnov@example.com",
+            "address": "789 Pine St, Novosibirsk",
+            "photos": null,
+            "general_info": "Gum issues, requires careful monitoring.",
+            "treatment_type": "Gum treatment",
+            "treatment_status": "treatment_started",
+            "start_date": "2022-11-01",
+            "last_visit_date": "2023-09-08",
+            "next_visit_date": "2023-11-15",
+            "notes": "Improving slowly, regular cleaning required.",
+            "cost_of_treatment": "5000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 4,
+        "fields": {
+            "full_name": "Elena Sokolova",
+            "sex": "F",
+            "age": 32,
+            "contact_info": "elena.sokolova@example.com",
+            "address": "321 Maple Rd, Yekaterinburg",
+            "photos": null,
+            "general_info": "No significant dental issues.",
+            "treatment_type": "Teeth whitening",
+            "treatment_status": "treatment_completed",
+            "start_date": "2023-05-01",
+            "last_visit_date": "2023-08-01",
+            "next_visit_date": null,
+            "notes": "Successful whitening, follow-up in six months.",
+            "cost_of_treatment": "8000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 5,
+        "fields": {
+            "full_name": "Dmitry Kuznetsov",
+            "sex": "M",
+            "age": 40,
+            "contact_info": "dmitry.kuznetsov@example.com",
+            "address": "654 Birch Ln, Kazan",
+            "photos": null,
+            "general_info": "Sensitive teeth, requires special toothpaste.",
+            "treatment_type": "Fluoride treatment",
+            "treatment_status": "treatment_completed",
+            "start_date": "2023-03-20",
+            "last_visit_date": "2023-08-20",
+            "next_visit_date": null,
+            "notes": "Teeth sensitivity improved.",
+            "cost_of_treatment": "3000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 6,
+        "fields": {
+            "full_name": "Natalia Volkova",
+            "sex": "F",
+            "age": 26,
+            "contact_info": "natalia.volkova@example.com",
+            "address": "789 Cedar Dr, Perm",
+            "photos": null,
+            "general_info": "Teeth grinding at night.",
+            "treatment_type": "Night guard",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-04-10",
+            "last_visit_date": "2023-09-15",
+            "next_visit_date": "2023-11-15",
+            "notes": "Night guard fitted, follow-up to monitor wear.",
+            "cost_of_treatment": "6000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 7,
+        "fields": {
+            "full_name": "Alexey Fedorov",
+            "sex": "M",
+            "age": 38,
+            "contact_info": "alexey.fedorov@example.com",
+            "address": "123 Elm St, Sochi",
+            "photos": null,
+            "general_info": "Requires extraction of wisdom teeth.",
+            "treatment_type": "Wisdom teeth removal",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-07-01",
+            "last_visit_date": "2023-08-01",
+            "next_visit_date": "2023-10-01",
+            "notes": "One tooth extracted, recovery going well.",
+            "cost_of_treatment": "10000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 8,
+        "fields": {
+            "full_name": "Maria Pavlova",
+            "sex": "F",
+            "age": 29,
+            "contact_info": "maria.pavlova@example.com",
+            "address": "456 Walnut St, Ufa",
+            "photos": null,
+            "general_info": "Regular check-up, no issues.",
+            "treatment_type": "Routine check-up",
+            "treatment_status": "treatment_completed",
+            "start_date": "2023-06-10",
+            "last_visit_date": "2023-06-10",
+            "next_visit_date": null,
+            "notes": "Healthy teeth, no further treatment needed.",
+            "cost_of_treatment": "2000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 9,
+        "fields": {
+            "full_name": "Oleg Voronin",
+            "sex": "M",
+            "age": 50,
+            "contact_info": "oleg.voronin@example.com",
+            "address": "321 Spruce St, Vladivostok",
+            "photos": null,
+            "general_info": "Chronic periodontal disease.",
+            "treatment_type": "Deep cleaning",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-04-05",
+            "last_visit_date": "2023-09-10",
+            "next_visit_date": "2023-10-25",
+            "notes": "Requires frequent cleaning, gums improving.",
+            "cost_of_treatment": "12000.00"
+        }
+    },
+    {
+        "model": "main.patient",
+        "pk": 10,
+        "fields": {
+            "full_name": "Svetlana Mikhailova",
+            "sex": "F",
+            "age": 33,
+            "contact_info": "svetlana.mikhailova@example.com",
+            "address": "789 Willow Dr, Samara",
+            "photos": null,
+            "general_info": "No major issues, wants cosmetic treatment.",
+            "treatment_type": "Veneers",
+            "treatment_status": "treatment_started",
+            "start_date": "2023-03-15",
+            "last_visit_date": "2023-08-30",
+            "next_visit_date": "2023-10-10",
+            "notes": "Veneers applied to two teeth, good results.",
+            "cost_of_treatment": "18000.00"
+        }
+    }
+]
