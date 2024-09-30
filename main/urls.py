@@ -9,5 +9,4 @@ urlpatterns = [
     path('price.html', views.price, name='price'),
     path('testimonial.html', views.testimonial, name='testimonial'),
     path('appointments/', include('appointments.urls')),
-
 ]

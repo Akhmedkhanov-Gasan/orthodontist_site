@@ -1,9 +1,10 @@
+from django.shortcuts import render, redirect
+from main.models import Doctor
 import os
 from datetime import datetime
 from django.conf import settings
-from django.shortcuts import render
-import requests
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -20,30 +21,41 @@ def send_telegram_message(message):
     try:
         response = requests.post(url, json=payload)
         if response.status_code != 200:
-            raise Exception(f"Error sending message: {response.status_code}, {response.text}")
+            raise Exception(
+                f"Error sending message: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"Failed to send message to Telegram: {e}")
 
 
 def appointment_view(request):
+    doctors = Doctor.objects.all()
+
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         contact_info = request.POST.get('contact_info')
-        appointment_date = request.POST.get('appointment_date')
-        appointment_time = request.POST.get('appointment_time')
+        appointment_datetime = request.POST.get('appointment_datetime')
+        doctor_id = request.POST.get('doctor')
+
+        doctor = Doctor.objects.get(id=doctor_id)
 
         file_path = os.path.join(settings.BASE_DIR, 'appointments.txt')
         with open(file_path, 'a', encoding='utf-8') as file:
-            file.write(f"{datetime.now()} - Name: {full_name}, Contact Info: {contact_info}, "
-                       f"Appointment Date: {appointment_date}, Appointment Time: {appointment_time}\n")
+            file.write(
+                f"{datetime.now()} - ФИГ: {full_name}, Контактная информация: {contact_info}, "
+                f"Дата на которую пациент хочет записаться: {appointment_datetime}, Доктор: {doctor.full_name}\n")
 
-        message = (f"New appointment:\n"
-                   f"Name: {full_name}\n"
-                   f"Contact Info: {contact_info}\n"
-                   f"Appointment Date: {appointment_date}\n"
-                   f"Appointment Time: {appointment_time}")
+        message = (f"Новая запись:\n"
+                   f"ФИО: {full_name}\n"
+                   f"Контактная информация: {contact_info}\n"
+                   f"Дата на которую пациент хочет записаться: {appointment_datetime}\n"
+                   f"Доктор: {doctor.full_name}")
         send_telegram_message(message)
 
-        return render(request, 'appointment.html')
+        return redirect('appointment_success')
 
-    return render(request, 'appointment.html')
+    return render(request, 'appointment.html', {'doctors': doctors})
+
+
+def appointment_success_view(request):
+    return render(request, 'includes/appointment_success.html')
+

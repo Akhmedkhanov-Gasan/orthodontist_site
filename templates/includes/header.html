@@ -19,16 +19,16 @@
         <div class="row gx-0">
             <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
                 <div class="d-inline-flex align-items-center">
-                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Opening Hours: Mon - Tues : 6.00 am - 10.00 pm, Sunday Closed </small>
+                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Часы работы: понедельник - пятница с 09:00 до 20: 00, выходные - не рабочие дни.</small>
                 </div>
             </div>
             <div class="col-md-6 text-center text-lg-end">
                 <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
                     <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i>info@example.com</p>
+                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i>jml_black@mail.ru</p>
                     </div>
                     <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone-alt me-2"></i>+012 345 6789</p>
+                        <p class="m-0"><i class="fa fa-phone-alt me-2"></i>+7 968 624 3098</p>
                     </div>
                 </div>
             </div>
@@ -39,28 +39,28 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="{% url 'home' %}" class="navbar-brand p-0">
-            <h1 class="m-0 text-primary"><i class="fa fa-tooth me-2"></i>JML</h1>
+            <h1 class="m-0 text-primary"><i class="fa fa-tooth me-2" ></i>JML</h1>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="{% url 'home' %}" class="nav-item nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
-                <a href="{% url 'about' %}" class="nav-item nav-link {% if active_page == 'about' %}active{% endif %}">About</a>
+                <a href="{% url 'home' %}" class="nav-item nav-link {% if active_page == 'home' %}active{% endif %}">Главная страница</a>
+                <a href="{% url 'about' %}" class="nav-item nav-link {% if active_page == 'about' %}active{% endif %}">О нас</a>
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Дополнительно</a>
                     <div class="dropdown-menu m-0">
                         <a href="{% url 'price' %}" class="dropdown-item {% if active_page == 'price' %}active{% endif %}">Pricing Plan</a>
                         <a href="{% url 'testimonial' %}" class="dropdown-item {% if active_page == 'testimonial' %}active{% endif %}">Testimonial</a>
                         <a href="{% url 'appointment' %}" class="dropdown-item {% if active_page == 'appointment' %}active{% endif %}">Appointment</a>
                     </div>
                 </div>
-                <a href="{% url 'contact' %}" class="nav-item nav-link {% if active_page == 'contact' %}active{% endif %}">Contact</a>
+                <a href="{% url 'contact' %}" class="nav-item nav-link {% if active_page == 'contact' %}active{% endif %}">Контакты</a>
                 <a href="/admin/" class="nav-item nav-link">Admin panel</a>
             </div>
 {#            <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></button>#}
-            <a href="{% url 'appointment' %}" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
+            <a href="{% url 'appointment' %}" class="btn btn-primary py-2 px-4 ms-3">Записаться на приём</a>
         </div>
     </nav>
     <!-- Navbar End -->
