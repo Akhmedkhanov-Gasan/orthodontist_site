@@ -13,14 +13,20 @@ class PatientAdmin(admin.ModelAdmin):
     actions = ['mark_treatment_completed', 'delete_selected_patients']
 
     fieldsets = (
-        ('Personal Info', {
-            'fields': ('full_name', 'sex', 'age', 'contact_info', 'address', 'photos')
+        ('Персональная информация', {
+            'fields': (
+            'full_name', 'sex', 'age', 'contact_info', 'address', 'photos')
         }),
-        ('Treatment Info', {
-            'fields': ('treatment_type', 'treatment_status', 'start_date', 'last_visit_date', 'next_visit_date', 'cost_of_treatment')
+        ('Информация о лечении', {
+            'fields': ('treatment_type', 'treatment_status', 'start_date',
+                       'last_visit_date', 'next_visit_date',
+                       'cost_of_treatment')
         }),
-        ('Notes', {
-            'fields': ('general_info', 'notes')
+        ('Заметки', {
+            'fields': (
+                'general_info',
+                'notes'
+            )
         }),
     )
 
@@ -50,6 +56,7 @@ class PatientAdmin(admin.ModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
+
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):

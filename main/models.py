@@ -28,6 +28,10 @@ class Patient(models.Model):
     notes = models.TextField(null=True, blank=True, verbose_name="Комментарии врача")
     cost_of_treatment = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Стоимость лечения")
 
+    class Meta:
+        verbose_name = "Пациент"
+        verbose_name_plural = "Пациенты"
+
     def __str__(self):
         return self.full_name
 
@@ -36,6 +40,10 @@ class Doctor(models.Model):
     full_name = models.CharField(max_length=255)
     specialty = models.CharField(max_length=255)
     contact_info = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Врач"
+        verbose_name_plural = "Врачи"
 
     def __str__(self):
         return self.full_name
