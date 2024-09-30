@@ -1,5 +1,3 @@
-Вот форматированный `README.md` с вашим описанием:
-
 ```markdown
 # Orthodontist Appointment Booking
 
