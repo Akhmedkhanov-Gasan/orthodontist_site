@@ -23,7 +23,10 @@ class PatientAdmin(admin.ModelAdmin):
                        'cost_of_treatment')
         }),
         ('Заметки', {
-            'fields': ('general_info', 'notes')
+            'fields': (
+                'general_info',
+                'notes'
+            )
         }),
     )
 
