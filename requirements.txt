@@ -101,7 +101,6 @@ social-auth-core==4.5.4
 soundfile==0.12.1
 spandrel==0.3.4
 sqlparse==0.5.1
-support_developer==1.0.5
 svgwrite==1.4.3
 sympy==1.12
 telebot==0.0.5
