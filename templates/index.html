@@ -9,20 +9,29 @@
                 <div class="carousel-item active">
                     <img class="w-100" src="{% static 'img/carousel-1.jpg' %}" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-3 animated slideInDown">Сохраняйте здоровье зубов</h4>
-                            <h1 class="text-white mb-md-4 animated zoomIn">Получите самое качественное стоматологическое лечение</h1>
-                            <a href="{% url 'appointment' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Записаться на приём</a>
-                            <a href="{% url 'contact' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Контакты</a>
+                        <div class="p-3 text-center" style="max-width: 900px;">
+                            <!-- Адаптивные заголовки для мобильных -->
+                            <h4 class="text-white text-uppercase mb-3 animated slideInDown fs-5 fs-md-4 fs-lg-3">
+                                Сохраняйте здоровье зубов
+                            </h4>
+                            <h1 class="text-white mb-md-4 animated zoomIn display-5 display-md-4 display-lg-3">
+                                Получите самое качественное стоматологическое лечение
+                            </h1>
+                            <!-- Адаптивные кнопки для мобильных -->
+                            <a href="{% url 'appointment' %}" class="btn btn-primary py-2 px-4 py-md-3 px-md-5 me-3 animated slideInLeft">
+                                Записаться на приём
+                            </a>
+                            <a href="{% url 'contact' %}" class="btn btn-secondary py-2 px-4 py-md-3 px-md-5 animated slideInRight">
+                                Контакты
+                            </a>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
     <!-- Carousel End -->
+
 
     <!-- About Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
