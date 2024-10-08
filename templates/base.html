@@ -40,7 +40,25 @@
     <!-- Content of the page goes here -->
     {% endblock %}
 
+<!-- Call to Action Start -->
+<div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="z-index: 1;">
+    <div class="container">
+        <div class="bg-primary p-3 text-center">
+            <h5 class="text-white mb-4">Готовы записаться на прием?</h5>
+            <a href="{% url 'appointment' %}" class="btn btn-light px-4 me-2">Записаться</a>
+            <a href="{% url 'contact' %}" class="btn btn-dark px-4">Связаться с нами</a>
+        </div>
+    </div>
+</div>
+<!-- Call to Action End -->
+
+
+
+
+
     {% include "includes/footer.html" %}
+
+
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>

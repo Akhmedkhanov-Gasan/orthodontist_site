@@ -37,9 +37,14 @@ class Patient(models.Model):
 
 
 class Doctor(models.Model):
-    full_name = models.CharField(max_length=255)
-    specialty = models.CharField(max_length=255)
-    contact_info = models.CharField(max_length=255, blank=True, null=True)
+    full_name = models.CharField(max_length=255, verbose_name="ФИО")
+    specialty = models.CharField(max_length=255, verbose_name="Специальность")
+    contact_info = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Контакты"
+    )
 
     class Meta:
         verbose_name = "Врач"
