@@ -1,0 +1,14 @@
+from django.urls import path
+from .views import (
+    ServiceListView,
+    AppointmentCreateView,
+    AboutPageDetail,
+    WorkListView
+)
+
+urlpatterns = [
+    path('services/', ServiceListView.as_view(), name='services-list'),
+    path('appointments/', AppointmentCreateView.as_view(), name='appointment-create'),
+    path('about/', AboutPageDetail.as_view(), name='about-page'),
+    path('works/', WorkListView.as_view(), name='works-list'),
+]
