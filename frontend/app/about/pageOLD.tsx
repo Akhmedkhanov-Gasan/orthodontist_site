@@ -1,20 +1,8 @@
-'use client';  // указываем, что это клиентский компонент
+'use client'
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-
-interface AboutPageData {
-  id: number;
-  title: string;
-  content: string;
-  image: string | null;
-}
+import { motion } from 'framer-motion'
 
 export default function About() {
-  const [aboutData, setAboutData] = useState<AboutPageData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Твои статические данные (values и т.п.)
   const values = [
     {
       title: "Профессионализм",
@@ -28,30 +16,7 @@ export default function About() {
       title: "Забота",
       description: "Индивидуальный подход и внимание к каждому пациенту"
     }
-  ];
-
-  useEffect(() => {
-    // Подставляем URL твоего бэка
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAboutData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching about data:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <p className="mt-32 text-center">Загрузка...</p>;
-  }
-
-  // Если aboutData нет, будет "не найдена"
-  if (!aboutData) {
-    return <p className="mt-32 text-center">Страница «О нас» не найдена.</p>;
-  }
+  ]
 
   return (
     <div className="pt-32 pb-20">
@@ -62,25 +27,14 @@ export default function About() {
           transition={{ duration: 0.8 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
-          {/* Заголовок из бэка */}
-          <h1 className="text-4xl font-light mb-6">{aboutData.title}</h1>
-          {/* Основной текст из бэка */}
+          <h1 className="text-4xl font-light mb-6">О нас</h1>
           <p className="text-gray-600">
-            {aboutData.content}
+            JML ORTHO - это современная ортодонтическая клиника, где опыт и инновации 
+            создают прекрасные улыбки. Мы специализируемся на исправлении прикуса 
+            с использованием передовых технологий и методик.
           </p>
-          {/* Если есть картинка - покажем */}
-          {aboutData.image && (
-            <div className="mt-8">
-              <img
-                src={`${process.env.NEXT_PUBLIC_API_URL}${aboutData.image}`}
-                alt="About"
-                className="mx-auto rounded-lg"
-              />
-            </div>
-          )}
         </motion.div>
 
-        {/* Блок статических values */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {values.map((value, index) => (
             <motion.div
@@ -110,5 +64,6 @@ export default function About() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }
+

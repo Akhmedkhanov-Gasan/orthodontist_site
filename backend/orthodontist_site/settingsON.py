@@ -3,17 +3,18 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-$@59m(6o4xx!e+-8s1ut+)-50f3e1-l^^+qh14g8qrk^e!0axv'
+SECRET_KEY = os.getenv('SECRET_KEY', 'some-default')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CORS_ALLOW_ALL_ORIGINS = True
 
 INSTALLED_APPS = [
     'grappelli',
-    'image_uploader_widget',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,8 +64,12 @@ WSGI_APPLICATION = 'orthodontist_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'foodgram'),
+        'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432),
     }
 }
 
@@ -92,8 +97,10 @@ USE_I18N = True
 USE_TZ = True
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = '/app/media'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/backend_static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

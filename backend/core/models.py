@@ -101,11 +101,22 @@ class AboutPage(models.Model):
 
 
 class Patient(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'Новый пациент'),
+        ('in_progress', 'В процессе'),
+        ('completed', 'Лечение окончено'),
+    ]
+
     full_name = models.CharField(max_length=100, verbose_name="ФИО")
     phone = models.CharField(
         max_length=30,
         verbose_name="Телефон",
         blank=True, null=True
+    )
+    email = models.EmailField(
+        verbose_name="Email",
+        blank=True,
+        null=True
     )
     birth_date = models.DateField(
         blank=True,
@@ -122,18 +133,38 @@ class Patient(models.Model):
         null=True,
         verbose_name="Дата окончания лечения"
     )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Описание"
+    )
+    initial_service_cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Стартовая стоимость услуг"
+    )
+    amount_paid = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Оплачено"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='new',
+        verbose_name="Статус"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(
         upload_to='patients/avatars/',
         blank=True,
         null=True,
         verbose_name="Аватар"
     )
-    description = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Описание"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Пациент"
@@ -141,6 +172,7 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.full_name
+
 
 
 class PatientImage(models.Model):

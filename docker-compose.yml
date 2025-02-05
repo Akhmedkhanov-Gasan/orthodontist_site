@@ -1,0 +1,55 @@
+version: '3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  db:
+    image: postgres:13.10
+    container_name: ortho_db
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ./backend/
+    container_name: ortho_backend
+    image: agasan/ortho_backend
+    env_file: .env
+    volumes:
+      - static:/backend_static/
+      - media:/app/media/
+    depends_on:
+      - db
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn orthodontist_site.wsgi:application --bind 0.0.0.0:8000"
+
+  frontend:
+    build: ./frontend/
+    container_name: ortho_frontend
+    image: agasan/ortho_frontend
+    env_file: .env
+    depends_on:
+      - backend
+    ports:
+    - "3000:3000"
+
+  gateway:
+    build: ./nginx/
+    container_name: ortho_nginx
+    image: agasan/ortho_gateway
+    env_file: .env
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+    volumes:
+      - static:/static/
+      - media:/app/media/
