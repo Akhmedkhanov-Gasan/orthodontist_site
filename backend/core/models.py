@@ -1,20 +1,16 @@
 from django.db import models
+from filer.fields.image import FilerImageField
 
 
 class Service(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")
     description = models.TextField(verbose_name="Описание", blank=True)
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name="Цена",
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", null=True, blank=True)
+    image = FilerImageField(
         null=True,
-        blank=True
-    )
-    image = models.ImageField(
-        upload_to='services/',
         blank=True,
-        null=True,
+        related_name="service_images",
+        on_delete=models.SET_NULL,
         verbose_name="Изображение"
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,10 +62,11 @@ class Appointment(models.Model):
 class Work(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название работы")
     description = models.TextField(verbose_name="Описание", blank=True)
-    image = models.ImageField(
-        upload_to='works/',
-        blank=True,
+    image = FilerImageField(
         null=True,
+        blank=True,
+        related_name="work_images",
+        on_delete=models.SET_NULL,
         verbose_name="Картинка"
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -106,7 +103,13 @@ class Patient(models.Model):
         ('in_progress', 'В процессе'),
         ('completed', 'Лечение окончено'),
     ]
-
+    avatar = FilerImageField(
+        null=True,
+        blank=True,
+        related_name="patient_avatars",
+        on_delete=models.SET_NULL,
+        verbose_name="Аватар"
+    )
     full_name = models.CharField(max_length=100, verbose_name="ФИО")
     phone = models.CharField(
         max_length=30,
@@ -159,12 +162,7 @@ class Patient(models.Model):
         verbose_name="Статус"
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(
-        upload_to='patients/avatars/',
-        blank=True,
-        null=True,
-        verbose_name="Аватар"
-    )
+
 
     class Meta:
         verbose_name = "Пациент"
@@ -174,22 +172,17 @@ class Patient(models.Model):
         return self.full_name
 
 
-
 class PatientImage(models.Model):
     patient = models.ForeignKey(
         Patient,
         on_delete=models.CASCADE,
         related_name='images'
     )
-    image = models.ImageField(
-        upload_to='patients/',
-        verbose_name="Изображение"
+    image = FilerImageField(
+        verbose_name="Изображение",
+        on_delete=models.CASCADE
     )
-    description = models.CharField(
-        max_length=255,
-        blank=True,
-        verbose_name="Описание"
-    )
+    description = models.CharField(max_length=255, blank=True, verbose_name="Описание")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

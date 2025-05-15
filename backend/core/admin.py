@@ -1,6 +1,5 @@
 from django.contrib import admin
-from image_uploader_widget.admin import ImageUploaderInline
-
+from django.utils.html import format_html
 from .models import (
     Patient, PatientImage,
     Appointment,
@@ -8,23 +7,10 @@ from .models import (
     Work,
     AboutPage,
 )
-from django.utils.html import format_html
 
 
-class PatientImageInline(ImageUploaderInline):
+class PatientImageInline(admin.TabularInline):
     model = PatientImage
-    # extra = 1
-    # readonly_fields = ('image_preview',)
-    # fields = ('image',)
-    #
-    # def image_preview(self, obj):
-    #     if obj.image:
-    #         return format_html(
-    #             '<img src="{}" width="200" height="200" style="object-fit: cover;" />',
-    #             obj.image.url
-    #         )
-    #     return ""
-    # image_preview.short_description = "Превью"
 
 
 class PatientAdmin(admin.ModelAdmin):
@@ -40,20 +26,7 @@ class PatientAdmin(admin.ModelAdmin):
         'initial_service_cost',
         'amount_paid'
     )
-    readonly_fields = ('avatar_preview',)
     list_filter = ('status',)
-
-    def avatar_preview(self, obj):
-        """
-        Возвращает HTML с тэгом <img>, если у пациента есть аватар.
-        """
-        if obj.avatar:
-            return format_html(
-                '<img src="{}" width="100" height="100" style="object-fit: cover;"/>',
-                obj.avatar.url
-            )
-        return ""
-    avatar_preview.short_description = "Аватар (превью)"
 
     def avatar_preview(self, obj):
         """

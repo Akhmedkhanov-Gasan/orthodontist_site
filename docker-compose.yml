@@ -15,6 +15,7 @@ services:
     ports:
       - "5433:5432"
 
+
   backend:
     build: ./backend/
     container_name: ortho_backend
@@ -23,10 +24,14 @@ services:
     volumes:
       - static:/backend_static/
       - media:/app/media/
+    environment:
+      - DJANGO_SETTINGS_MODULE=orthodontist_site.settings.docker
     depends_on:
       - db
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "
+             sleep 10 &&
+             python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn orthodontist_site.wsgi:application --bind 0.0.0.0:8000"
 
