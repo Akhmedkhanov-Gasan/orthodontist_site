@@ -12,7 +12,6 @@ Key features include:
 - Responsive design using Bootstrap and Wow.js for animations.
 - Static pages such as "About Us", "Pricing", "Contact", and "Testimonials".
 - Appointment data stored in a text file for easy access.
-
 ```
 
 ## License
