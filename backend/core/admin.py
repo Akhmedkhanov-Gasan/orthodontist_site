@@ -29,9 +29,6 @@ class PatientAdmin(admin.ModelAdmin):
     list_filter = ('status',)
 
     def avatar_preview(self, obj):
-        """
-        Возвращает HTML с тэгом <img>, если у пациента есть аватар.
-        """
         if obj.avatar:
             return format_html(
                 '<img src="{}" width="200" height="200" style="object-fit: cover;"/>',

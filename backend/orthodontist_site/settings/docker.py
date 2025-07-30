@@ -5,11 +5,6 @@ from .base import *
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
-INSTALLED_APPS += [
-    'easy_thumbnails',
-    'filer',
-]
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

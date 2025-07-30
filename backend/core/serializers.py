@@ -10,15 +10,25 @@ class AboutPageSerializer(serializers.ModelSerializer):
 
 
 class ServiceSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Service
         fields = '__all__'
 
+    def get_image(self, obj):
+        return obj.image.url if obj.image else None
+
 
 class WorkSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
-        model = Work
-        fields = '__all__'
+        model  = Work
+        fields = "__all__"
+
+    def get_image(self, obj):
+        return obj.image.url if obj.image else None
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -30,4 +40,3 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if value and value < date.today():
             raise serializers.ValidationError("Нельзя выбрать дату в прошлом.")
         return value
-

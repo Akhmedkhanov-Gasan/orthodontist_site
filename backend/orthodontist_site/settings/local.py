@@ -6,11 +6,6 @@ PROJECT_ROOT = BASE_DIR.parent
 DEBUG = True
 ALLOWED_HOSTS = []
 
-INSTALLED_APPS += [
-    'easy_thumbnails',
-    'filer',
-]
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
