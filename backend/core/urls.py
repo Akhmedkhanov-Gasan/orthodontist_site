@@ -3,7 +3,8 @@ from .views import (
     ServiceListView,
     AppointmentCreateView,
     AboutPageDetail,
-    WorkListView
+    WorkListView,
+    csrf,
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('appointments/', AppointmentCreateView.as_view(), name='appointment-create'),
     path('about/', AboutPageDetail.as_view(), name='about-page'),
     path('works/', WorkListView.as_view(), name='works-list'),
+    path('csrf/', csrf, name='csrf'),
 ]

@@ -1,10 +1,18 @@
 # orthodontist_site/settings/local.py
 from .base import *
+from dotenv import load_dotenv, find_dotenv
 
 PROJECT_ROOT = BASE_DIR.parent
 
+load_dotenv(find_dotenv())
+RECAPTCHA_SECRET = os.getenv("RECAPTCHA_SECRET", "dummy-secret")
+
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOW_CREDENTIALS = True
 
 DATABASES = {
     'default': {

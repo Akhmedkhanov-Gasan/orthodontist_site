@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Service, Appointment, AboutPage, Work
 from .serializers import (
@@ -12,7 +12,7 @@ from .serializers import (
     AboutPageSerializer,
     WorkSerializer
 )
-
+from .utils import verify_recaptcha
 
 class ServiceListView(APIView):
     def get(self, request):
@@ -21,13 +21,30 @@ class ServiceListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AppointmentCreateView(APIView):
+    """
+    Публичная форма записи.
+    Требует:
+      - корректный CSRF-token (браузер шлёт cookie + заголовок)
+      - валидный reCAPTCHA v3 token в поле  `recaptcha_token`
+    Ограничено 5 запросами в минуту анонимно (AnonRateThrottle).
+    """
+
     def post(self, request):
+        if not verify_recaptcha(
+                request.data.get("recaptcha_token"),
+                request.META.get("REMOTE_ADDR")
+        ):
+            return Response(
+                {"detail": "reCAPTCHA failed"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
-            appointment = serializer.save()
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -46,3 +63,7 @@ class WorkListView(APIView):
         works = Work.objects.all()
         serializer = WorkSerializer(works, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+@ensure_csrf_cookie
+def csrf(request):
+    return JsonResponse({"ok": True})
