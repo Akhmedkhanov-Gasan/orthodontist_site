@@ -20,13 +20,11 @@ export default function Appointment() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  /* ─── отправка формы ─────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     setErrorMessage('');
 
-    /* —— фронтовая валидация —— */
     if (!name.trim()) {
       setErrorMessage('Введите имя');
       setStatus('error');
