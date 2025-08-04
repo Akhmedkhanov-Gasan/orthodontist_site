@@ -28,10 +28,10 @@ jobs:
 
     - name: Smoke-test backend
       run: |
-        ./github/scripts/smoke_backend.sh \
+        ./.github/scripts/smoke_backend.sh \
           "${{ env.REGISTRY }}/ortho_backend:${{ env.IMAGE_TAG }}" \
           '${{ secrets.RECAPTCHA_SECRET }}'
-
+          
 # ───────────── build-frontend ──────────────
   frontend:
     needs: backend
