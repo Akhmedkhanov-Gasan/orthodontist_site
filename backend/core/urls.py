@@ -6,6 +6,7 @@ from .views import (
     WorkListView,
     csrf,
     health,
+    ping,
 )
 
 urlpatterns = [
@@ -14,5 +15,6 @@ urlpatterns = [
     path('about/', AboutPageDetail.as_view(), name='about-page'),
     path('works/', WorkListView.as_view(), name='works-list'),
     path('csrf/', csrf, name='csrf'),
+    path("ping/", ping,   name="ping"),
     path("health/", health, name="health"),
 ]

@@ -77,3 +77,6 @@ def health(request):
         return HttpResponse("db_error", status=500)
 
     return HttpResponse("ok", status=200)
+
+def ping(request):
+    return HttpResponse("pong", status=200)

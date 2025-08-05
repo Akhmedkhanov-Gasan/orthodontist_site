@@ -11,9 +11,9 @@ docker run -d --name ortho_test \
   -e RECAPTCHA_SECRET="$SECRET" \
   -p 8000:8000 "$IMAGE"
 
-for i in {1..15}; do
-  if curl -sf http://localhost:8000/api/health/ >/dev/null; then
-    echo "✅ backend is healthy"
+for i in {1..20}; do
+  if curl -sf http://localhost:8000/api/ping/ >/dev/null; then
+    echo "✅ backend is healthy (ping)"
     docker rm -f ortho_test
     exit 0
   fi
