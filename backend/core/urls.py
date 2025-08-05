@@ -5,6 +5,7 @@ from .views import (
     AboutPageDetail,
     WorkListView,
     csrf,
+    health,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('about/', AboutPageDetail.as_view(), name='about-page'),
     path('works/', WorkListView.as_view(), name='works-list'),
     path('csrf/', csrf, name='csrf'),
+    path("health/", health, name="health"),
 ]

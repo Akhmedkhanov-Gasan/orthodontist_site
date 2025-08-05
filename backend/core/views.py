@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.http import JsonResponse
+from django.db import connection
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+
 
 from .models import Service, Appointment, AboutPage, Work
 from .serializers import (
@@ -67,3 +69,11 @@ class WorkListView(APIView):
 @ensure_csrf_cookie
 def csrf(request):
     return JsonResponse({"ok": True})
+
+def health(request):
+    try:
+        connection.ensure_connection()
+    except Exception:
+        return HttpResponse("db_error", status=500)
+
+    return HttpResponse("ok", status=200)
