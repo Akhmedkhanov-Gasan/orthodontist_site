@@ -12,7 +12,7 @@ docker run -d --name ortho_test \
   -p 8000:8000 "$IMAGE"
 
 for i in {1..15}; do
-  if curl -sf http://localhost:8000/health/ >/dev/null; then
+  if curl -sf http://localhost:8000/api/health/ >/dev/null; then
     echo "✅ backend is healthy"
     docker rm -f ortho_test
     exit 0
