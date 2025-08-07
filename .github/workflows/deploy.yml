@@ -84,6 +84,7 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: gasan
         key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
         script: |
           export TAG=${{ env.IMAGE_TAG }}
           export RECAPTCHA_SECRET='${{ secrets.RECAPTCHA_SECRET }}'
