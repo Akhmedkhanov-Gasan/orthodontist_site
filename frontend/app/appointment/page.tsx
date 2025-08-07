@@ -31,7 +31,7 @@ export default function Appointment() {
       return;
     }
     if (!PHONE_RE.test(phone)) {
-      setErrorMessage('Телефон должен быть в формате +7 (123) 45 67');
+      setErrorMessage('Неверный формат номера телефона');
       setStatus('error');
       return;
     }
@@ -108,7 +108,7 @@ export default function Appointment() {
                 <label className="block text-sm font-medium mb-2">Телефон</label>
                 <input
                     type="tel"
-                    title="+71112223344"
+                    title="+7 (8) 123 45 67"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}

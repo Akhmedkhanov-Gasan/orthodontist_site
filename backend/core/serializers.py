@@ -50,7 +50,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def validate_phone(self, value: str) -> str:
         if not PHONE_RE.fullmatch(value):
             raise serializers.ValidationError(
-                'Телефон должен быть в формате +7 (123) 45 67'
+                'Неверный формат номера телефона'
             )
         return value
 
