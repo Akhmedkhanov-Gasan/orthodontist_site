@@ -9,7 +9,7 @@ function getCookie(name: string) {
   return m ? decodeURIComponent(m[1]) : '';
 }
 
-const PHONE_RE = /^\+7\d{10}$/;
+const PHONE_RE = /^(?:\+7|8)\d{10}$/;
 
 export default function Appointment() {
   const [name,  setName]  = useState('');
@@ -108,7 +108,7 @@ export default function Appointment() {
                 <label className="block text-sm font-medium mb-2">Телефон</label>
                 <input
                     type="tel"
-                    title="+79652223344"
+                    title="+71112223344"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}

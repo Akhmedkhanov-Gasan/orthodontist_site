@@ -4,7 +4,7 @@ import re, unicodedata
 
 from .models import AboutPage, Appointment, Service, Work
 
-PHONE_RE = re.compile(r'^\+7\d{10}$')
+PHONE_RE = re.compile(r'^(?:\+7|8)\d{10}$')
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
