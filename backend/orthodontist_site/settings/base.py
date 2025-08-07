@@ -80,7 +80,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "5/min",
+        "anon": "100/min",
     },
 }
 
