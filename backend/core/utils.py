@@ -17,23 +17,14 @@ def verify_recaptcha(token, remote_ip=None):
             data=data,
             timeout=5,
         )
-        payload = r.json() if r.headers.get("content-type", "").startswith("application/json") else {}
+        r.raise_for_status()
+        result = r.json()
     except requests.RequestException as e:
-        logging.error("reCAPTCHA verify error: %s", e)
+        logging.exception("reCAPTCHA HTTP error: %s", e)
         return False
     except ValueError:
-        logging.error("reCAPTCHA non-JSON response: %r", getattr(r, "text", "")[:200])
+        logging.exception("reCAPTCHA invalid JSON")
         return False
 
-    logging.warning("reCAPTCHA response: %s", payload)
-
-    ok = payload.get("success") is True
-    score = float(payload.get("score") or 0)
-    action = payload.get("action")
-    if not ok:
-        return False
-    if score < 0.5:
-        return False
-    if action and action != "appointment":
-        return False
-    return True
+    logging.warning("reCAPTCHA response: %s", result)
+    return bool(result.get("success")) and result.get("action") == "appointment" and float(result.get("score", 0)) >= 0.5
