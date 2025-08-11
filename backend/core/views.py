@@ -24,23 +24,16 @@ class ServiceListView(APIView):
 
 
 class AppointmentCreateView(APIView):
-    """
-    Публичная форма записи.
-    Требует:
-      - корректный CSRF-token (браузер шлёт cookie + заголовок)
-      - валидный reCAPTCHA v3 token в поле  `recaptcha_token`
-    Ограничено 5 запросами в минуту анонимно (AnonRateThrottle).
-    """
-
     def post(self, request):
-        if not verify_recaptcha(
-                request.data.get("recaptcha_token"),
-                request.META.get("REMOTE_ADDR")
-        ):
-            return Response(
-                {"detail": "reCAPTCHA failed"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        token = (
+                request.data.get("recaptcha_token")
+                or request.data.get("g-recaptcha-response")
+                or request.data.get("recaptcha")
+                or request.data.get("token")
+        )
+
+        if not verify_recaptcha(token, request.META.get("REMOTE_ADDR")):
+            return Response({"detail": "reCAPTCHA failed"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
