@@ -6,6 +6,7 @@ from django.db import connection
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+import logging, os
 
 from .models import Service, Appointment, AboutPage, Work
 from .serializers import (
@@ -25,22 +26,27 @@ class ServiceListView(APIView):
 
 class AppointmentCreateView(APIView):
     def post(self, request):
-        token = (
-                request.data.get("recaptcha_token")
-                or request.data.get("g-recaptcha-response")
-                or request.data.get("recaptcha")
-                or request.data.get("token")
-        )
+        try:
+            token = (
+                    request.data.get("recaptcha_token")
+                    or request.data.get("g-recaptcha-response")
+                    or request.data.get("recaptcha")
+                    or request.data.get("token")
+            )
 
-        if not verify_recaptcha(token, request.META.get("REMOTE_ADDR")):
-            return Response({"detail": "reCAPTCHA failed"}, status=status.HTTP_400_BAD_REQUEST)
+            if os.getenv("DISABLE_RECAPTCHA") != "1":
+                if not verify_recaptcha(token, request.META.get("REMOTE_ADDR")):
+                    return Response({"detail": "reCAPTCHA failed"}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = AppointmentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer = AppointmentSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            obj = serializer.save()
+            return Response(AppointmentSerializer(obj).data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logging.exception("AppointmentCreateView failed")
+            return Response({"detail": "server_error", "error": str(e)}, status=500)
+
 
 
 class AboutPageDetail(APIView):
