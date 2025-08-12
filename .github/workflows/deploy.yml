@@ -3,6 +3,7 @@ name: CI/CD
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: {}
 
 env:
   REGISTRY: agasan
@@ -43,7 +44,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build & push backend
         uses: docker/build-push-action@v5
         with:
@@ -54,7 +54,6 @@ jobs:
             ${{ env.REGISTRY }}/ortho_backend:prod
           cache-from: type=registry,ref=${{ env.REGISTRY }}/ortho_backend:buildcache
           cache-to:   type=registry,ref=${{ env.REGISTRY }}/ortho_backend:buildcache,mode=max
-
       - name: Smoke-test backend
         run: |
           ./.github/scripts/smoke_backend.sh \
@@ -72,7 +71,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build & push frontend
         uses: docker/build-push-action@v5
         with:
@@ -98,7 +96,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build & push gateway
         uses: docker/build-push-action@v5
         with:
@@ -112,7 +109,7 @@ jobs:
 
   deploy:
     needs: [changes, backend, frontend, gateway]
-    if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.gateway == 'true'
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.gateway == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH
