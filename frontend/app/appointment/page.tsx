@@ -44,6 +44,7 @@ export default function Appointment() {
           process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
           { action: 'appointment' }
       );
+      console.log('reCAPTCHA token len:', token?.length, 'head:', token?.slice(0, 12));
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments/`, {
         method: 'POST',
@@ -62,9 +63,26 @@ export default function Appointment() {
       });
 
       if (!res.ok) {
-        const data = await res.json();          // { phone: ["..."], name: ["..."] }
-        const key  = Object.keys(data)[0];
-        setErrorMessage(data[key]?.[0] ?? 'Не удалось отправить форму');
+        const data = await res.json().catch(() => ({} as any));
+
+        if (typeof data.detail === 'string') {
+          setErrorMessage(data.detail);
+        } else if (Array.isArray(data.non_field_errors)) {
+          setErrorMessage(data.non_field_errors[0] || 'Ошибка');
+        } else if (data && typeof data === 'object') {
+          const firstKey = Object.keys(data)[0];
+          const val = (data as any)[firstKey];
+          if (Array.isArray(val)) {
+            setErrorMessage(val[0] || 'Ошибка');
+          } else if (typeof val === 'string') {
+            setErrorMessage(val);
+          } else {
+            setErrorMessage('Не удалось отправить форму');
+          }
+        } else {
+          setErrorMessage('Не удалось отправить форму');
+        }
+
         setStatus('error');
         return;
       }
@@ -77,7 +95,7 @@ export default function Appointment() {
       setStatus('error');
     }
   };
-
+  /* ─────────────────────────────────────────────────────── */
 
   return (
       <div className="pt-32 pb-20">
