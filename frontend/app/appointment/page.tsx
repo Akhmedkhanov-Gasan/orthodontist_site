@@ -77,7 +77,7 @@ export default function Appointment() {
       setStatus('error');
     }
   };
-  /* ─────────────────────────────────────────────────────── */
+
 
   return (
       <div className="pt-32 pb-20">
