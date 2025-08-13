@@ -1,13 +1,15 @@
 # core/utils.py
 def verify_recaptcha(token, remote_ip=None):
     from django.conf import settings
-    import requests, logging
+    import os, requests, logging
 
-    if not token or not getattr(settings, "RECAPTCHA_SECRET", ""):
-        logging.warning("reCAPTCHA: missing token or secret")
+    secret = getattr(settings, "RECAPTCHA_SECRET", "") or os.getenv("RECAPTCHA_SECRET", "")
+
+    if not token or not secret:
+        logging.warning("reCAPTCHA: missing token or secret (token=%s, secret=%s)", bool(token), bool(secret))
         return False
 
-    data = {"secret": settings.RECAPTCHA_SECRET, "response": token}
+    data = {"secret": secret, "response": token}
     if remote_ip:
         data["remoteip"] = remote_ip
 
