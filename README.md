@@ -2,22 +2,22 @@
 # Orthodontist Site
 
 Full-stack website for an orthodontist with online appointment booking. 
-It includes a **Next.js** frontend, **Django + DRF** backend, **PostgreSQL**,
-and an **Nginx** gateway, all wired with **Docker Compose** and **GitHub Actions** CI/CD. 
-**reCAPTCHA v3** and **CSRF** are enabled end-to-end.
+It includes a Next.js frontend, Django + DRF backend, PostgreSQL,
+and an Nginx gateway, all wired with Docker Compose and GitHub Actions CI/CD. 
+reCAPTCHA v3 and CSRF are enabled end-to-end.
 
 ---
 
 ## Features
 
-- Public pages: **Services**, **Portfolio (Works)**, **About**.
-- **Appointment form**: name, phone, preferred date, comment.
+- Public pages: Services, Portfolio (Works), About.
+- Appointment form: name, phone, preferred date, comment.
 - Client & server validation:
     - Phone regex: `^(?:\+7|8)\d{10}$`
     - Preferred date cannot be in the past.
-- **reCAPTCHA v3** (action: `appointment`) on the frontend + server-side verification.
-- **CSRF** protection (cookie + `X-CSRFToken` header).
-- **Django Admin** to manage:
+- reCAPTCHA v3 (action: `appointment`) on the frontend + server-side verification.
+- CSRF protection (cookie + `X-CSRFToken` header).
+- Django Admin to manage:
     - Appointments (statuses: `new`, `repeat`, `confirmed`, `done`, `canceled`)
     - Services, Works, About content.
 - Health endpoints for monitoring.
@@ -26,12 +26,12 @@ and an **Nginx** gateway, all wired with **Docker Compose** and **GitHub Actions
 
 ## Tech Stack
 
-- **Frontend:** Next.js (React), Framer Motion
-- **Backend:** Django, Django REST Framework
-- **Database:** PostgreSQL
-- **Gateway:** Nginx (reverse proxy; serves static/media)
-- **CI/CD:** GitHub Actions → Docker Hub → SSH deploy
-- **Runtime:** Docker / Docker Compose
+- Frontend: Next.js (React), Framer Motion
+- Backend: Django, Django REST Framework
+- Database: PostgreSQL
+- Gateway: Nginx (reverse proxy; serves static/media)
+- CI/CD: GitHub Actions → Docker Hub → SSH deploy
+- Runtime: Docker / Docker Compose
 
 ---
 
@@ -194,22 +194,22 @@ docker logs -f ortho_backend
 
 If you see `400 {"detail":"reCAPTCHA failed"}`:
 
-1. **Token missing on backend**
+1. Token missing on backend
    Logs may show: `reCAPTCHA: missing token or secret`
 
     * Ensure frontend sends `recaptcha_token`.
     * Confirm `RECAPTCHA_SECRET` is present in the container and in Django settings.
 
-2. **Wrong domain or site/secret keys**
+2. Wrong domain or site/secret keys
 
     * Add your domain to the reCAPTCHA admin console.
     * Verify you’re using v3 keys (site key on frontend, secret key on backend).
 
-3. **Action / score mismatch**
+3. Action / score mismatch
 
     * The backend checks `result.action == "appointment"` and `score >= 0.5`.
 
-4. **Network issues to Google verify endpoint**
+4. Network issues to Google verify endpoint
 
     * Backend must reach `https://www.google.com/recaptcha/api/siteverify`.
 
