@@ -1,10 +1,16 @@
 # orthodontist_site/settings/local.py
+from pathlib import Path
+from dotenv import load_dotenv
+
+ENV_FILE = Path(__file__).resolve().parent.parent.parent.parent / ".env"
+load_dotenv(ENV_FILE)
+
 from .base import *
-from dotenv import load_dotenv, find_dotenv
 
 PROJECT_ROOT = BASE_DIR.parent
+ENV_FILE = BASE_DIR.parent.parent / ".env"
 
-load_dotenv(find_dotenv())
+load_dotenv(ENV_FILE)
 RECAPTCHA_SECRET = os.getenv("RECAPTCHA_SECRET", "dummy-secret")
 
 DEBUG = True

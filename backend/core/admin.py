@@ -24,9 +24,13 @@ class PatientAdmin(admin.ModelAdmin):
         'end_treatment_date',
         'status',
         'initial_service_cost',
-        'amount_paid'
+        'amount_paid',
+        'telegram_username',
+        'telegram_id',
+        'is_active',
     )
-    list_filter = ('status',)
+    search_fields = ('full_name', 'phone', 'telegram_username', 'telegram_id')
+    list_filter = ('status', 'is_active')
 
     def avatar_preview(self, obj):
         if obj.avatar:
@@ -43,9 +47,15 @@ admin.site.register(Patient, PatientAdmin)
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone', 'preferred_date', 'created_at', 'status')
-    search_fields = ('name', 'phone')
-    list_filter = ('status', 'preferred_date')
+    list_display = ('name', 'phone', 'patient', 'preferred_date', 'created_at', 'status')
+    search_fields = (
+        'name',
+        'phone',
+        'patient__full_name',
+        'patient__phone',
+        'patient__telegram_username',
+    )
+    list_filter = ('status', 'preferred_date', 'created_at')
     readonly_fields = ('created_at',)
 
 

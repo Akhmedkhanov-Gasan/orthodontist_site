@@ -6,6 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default')
 
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID", "")
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+
+
 DEBUG = False
 
 ALLOWED_HOSTS = []

@@ -31,7 +31,14 @@ class Appointment(models.Model):
         ('done', 'Завершено'),
         ('canceled', 'Отменено'),
     ]
-
+    patient = models.ForeignKey(
+        "Patient",
+        on_delete=models.SET_NULL,
+        related_name="appointments",
+        blank=True,
+        null=True,
+        verbose_name="Пациент",
+    )
     name = models.CharField(max_length=100, verbose_name="Имя")
     phone = models.CharField(max_length=30, verbose_name="Телефон")
     message = models.TextField(verbose_name="Комментарий", blank=True)
@@ -115,6 +122,22 @@ class Patient(models.Model):
         max_length=30,
         verbose_name="Телефон",
         blank=True, null=True
+    )
+    telegram_id = models.BigIntegerField(
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name="Telegram ID",
+    )
+    telegram_username = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        verbose_name="Telegram username",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен",
     )
     email = models.EmailField(
         verbose_name="Email",
