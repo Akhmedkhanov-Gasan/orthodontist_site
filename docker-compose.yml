@@ -54,3 +54,17 @@ services:
     volumes:
       - static:/static/
       - media:/app/media/
+
+  bot:
+    image: agasan/ortho_backend:prod
+    container_name: ortho_bot
+    env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=orthodontist_site.settings.docker
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - media:/app/media/
+    command: python manage.py runbot
+    restart: unless-stopped
