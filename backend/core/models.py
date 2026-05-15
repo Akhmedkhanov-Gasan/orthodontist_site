@@ -214,3 +214,128 @@ class PatientImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.patient.full_name}"
+
+
+class HomePage(models.Model):
+    hero_title = models.CharField(
+        max_length=200,
+        verbose_name="Заголовок главного блока"
+    )
+    hero_subtitle = models.TextField(
+        verbose_name="Описание главного блока",
+        blank=True
+    )
+    hero_button_text = models.CharField(
+        max_length=100,
+        verbose_name="Текст кнопки",
+        default="Записаться на консультацию"
+    )
+    hero_button_url = models.CharField(
+        max_length=200,
+        verbose_name="Ссылка кнопки",
+        default="/appointment"
+    )
+    hero_image = FilerImageField(
+        null=True,
+        blank=True,
+        related_name="home_hero_images",
+        on_delete=models.SET_NULL,
+        verbose_name="Картинка главного блока"
+    )
+
+    about_title = models.CharField(
+        max_length=200,
+        verbose_name="Заголовок блока о клинике",
+        blank=True
+    )
+    about_text = models.TextField(
+        verbose_name="Текст блока о клинике",
+        blank=True
+    )
+
+    feature_1_title = models.CharField(
+        max_length=200,
+        verbose_name="Преимущество 1 - заголовок",
+        default="3D-планирование лечения"
+    )
+    feature_1_description = models.TextField(
+        verbose_name="Преимущество 1 - описание",
+        default="Используем современные технологии для визуализации результатов до начала лечения"
+    )
+
+    feature_2_title = models.CharField(
+        max_length=200,
+        verbose_name="Преимущество 2 - заголовок",
+        default="Цифровые оттиски"
+    )
+    feature_2_description = models.TextField(
+        verbose_name="Преимущество 2 - описание",
+        default="Забудьте о неприятных процедурах. Используем только цифровые сканеры"
+    )
+
+    feature_3_title = models.CharField(
+        max_length=200,
+        verbose_name="Преимущество 3 - заголовок",
+        default="Виртуальная консультация"
+    )
+    feature_3_description = models.TextField(
+        verbose_name="Преимущество 3 - описание",
+        default="Первичная консультация возможна онлайн. Экономьте своё время"
+    )
+
+    about_bullet_1 = models.CharField(
+        max_length=255,
+        verbose_name="Пункт 1",
+        default="Команда высококвалифицированных специалистов"
+    )
+    about_bullet_2 = models.CharField(
+        max_length=255,
+        verbose_name="Пункт 2",
+        default="Индивидуальный подход к каждому пациенту"
+    )
+    about_bullet_3 = models.CharField(
+        max_length=255,
+        verbose_name="Пункт 3",
+        default="Использование современного оборудования"
+    )
+    about_bullet_4 = models.CharField(
+        max_length=255,
+        verbose_name="Пункт 4",
+        default="Комфортные условия лечения"
+    )
+
+    footer_title = models.CharField(
+        max_length=100,
+        verbose_name="Название в футере",
+        default="JML ORTHO"
+    )
+    footer_description = models.CharField(
+        max_length=255,
+        verbose_name="Описание в футере",
+        default="Профессиональная ортодонтическая клиника"
+    )
+    footer_copyright = models.CharField(
+        max_length=255,
+        verbose_name="Копирайт",
+        default="© 2025 JML ORTHO. Все права защищены."
+    )
+    footer_contacts = models.CharField(
+        max_length=255,
+        verbose_name="Адрес и телефон",
+        default="г. Москва, ул. Примерная, д. 1 | Тел: +7 (495) 123-45-67"
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and HomePage.objects.exists():
+            raise ValueError("Можно создать только одну главную страницу")
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Главная страница"
+        verbose_name_plural = "Главная страница"
+
+    def __str__(self):
+        return "Главная страница"
