@@ -20,7 +20,7 @@ services:
   backend:
     build: ./backend/
     container_name: ortho_backend
-    image: agasan/ortho_backend
+    image: agasan/ortho_backend:prod
     env_file: .env
     volumes:
       - static:/backend_static/
@@ -34,7 +34,7 @@ services:
   frontend:
     build: ./frontend/
     container_name: ortho_frontend
-    image: agasan/ortho_frontend
+    image: agasan/ortho_frontend:prod
     env_file: .env.frontend
     depends_on:
       - backend
@@ -44,7 +44,7 @@ services:
   gateway:
     build: ./nginx/
     container_name: ortho_nginx
-    image: agasan/ortho_gateway
+    image: agasan/ortho_gateway:prod
     env_file: .env
     depends_on:
       - backend
