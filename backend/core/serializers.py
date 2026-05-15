@@ -2,7 +2,7 @@ from rest_framework import serializers
 from datetime import date
 import re, unicodedata
 
-from .models import AboutPage, Appointment, Service, Work
+from .models import AboutPage, Appointment, Service, Work, HomePage
 
 PHONE_RE = re.compile(r'^(?:\+7|8)\d{10}$')
 
@@ -11,6 +11,17 @@ class AboutPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutPage
         fields = '__all__'
+
+
+class HomePageSerializer(serializers.ModelSerializer):
+    hero_image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = HomePage
+        fields = "__all__"
+
+    def get_hero_image(self, obj):
+        return obj.hero_image.url if obj.hero_image else None
 
 
 class ServiceSerializer(serializers.ModelSerializer):

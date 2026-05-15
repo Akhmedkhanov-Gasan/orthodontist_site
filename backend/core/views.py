@@ -8,13 +8,15 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 import logging, os
 
-from .models import Service, Appointment, AboutPage, Work
+from .models import Service, Appointment, AboutPage, Work, HomePage
 from .serializers import (
     ServiceSerializer,
     AppointmentSerializer,
     AboutPageSerializer,
-    WorkSerializer
+    WorkSerializer,
+    HomePageSerializer,
 )
+
 from .utils import verify_recaptcha
 
 class ServiceListView(APIView):
@@ -56,6 +58,19 @@ class AboutPageDetail(APIView):
             return Response({"detail": "Not found."},
                             status=status.HTTP_404_NOT_FOUND)
         serializer = AboutPageSerializer(about_page)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class HomePageDetail(APIView):
+    def get(self, request):
+        home_page = HomePage.objects.first()
+        if not home_page:
+            return Response(
+                {"detail": "Not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = HomePageSerializer(home_page)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

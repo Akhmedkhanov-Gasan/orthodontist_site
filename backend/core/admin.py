@@ -1,11 +1,15 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.shortcuts import redirect
+from django.urls import reverse
+
 from .models import (
     Patient, PatientImage,
     Appointment,
     Service,
     Work,
     AboutPage,
+    HomePage,
 )
 
 
@@ -76,3 +80,65 @@ class WorkAdmin(admin.ModelAdmin):
 class AboutPageAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
+
+@admin.register(HomePage)
+class HomePageAdmin(admin.ModelAdmin):
+    list_display = ("hero_title", "updated_at")
+
+    fieldsets = (
+        ("Главный блок", {
+            "fields": (
+                "hero_title",
+                "hero_subtitle",
+                "hero_button_text",
+                "hero_button_url",
+                "hero_image",
+            )
+        }),
+        ("Преимущества", {
+            "fields": (
+                "feature_1_title",
+                "feature_1_description",
+                "feature_2_title",
+                "feature_2_description",
+                "feature_3_title",
+                "feature_3_description",
+            )
+        }),
+        ("Блок о клинике", {
+            "fields": (
+                "about_title",
+                "about_text",
+                "about_bullet_1",
+                "about_bullet_2",
+                "about_bullet_3",
+                "about_bullet_4",
+            )
+        }),
+        ("Футер", {
+            "fields": (
+                "footer_title",
+                "footer_description",
+                "footer_copyright",
+                "footer_contacts",
+            )
+        }),
+    )
+
+    def has_add_permission(self, request):
+        if HomePage.objects.exists():
+            return False
+
+        return super().has_add_permission(request)
+
+    def changelist_view(self, request, extra_context=None):
+        home_page = HomePage.objects.first()
+
+        if home_page:
+            url = reverse(
+                "admin:core_homepage_change",
+                args=[home_page.pk],
+            )
+            return redirect(url)
+
+        return super().changelist_view(request, extra_context)
