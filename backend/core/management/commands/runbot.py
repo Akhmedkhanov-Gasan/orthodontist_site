@@ -24,7 +24,14 @@ class Command(BaseCommand):
         if not token:
             raise RuntimeError("TELEGRAM_BOT_TOKEN is not set")
 
-        application = Application.builder().token(token).build()
+        proxy_url = getattr(settings, "TELEGRAM_PROXY_URL", "")
+
+        builder = Application.builder().token(token)
+
+        if proxy_url:
+            builder = builder.proxy_url(proxy_url).get_updates_proxy_url(proxy_url)
+
+        application = builder.build()
 
         application.add_handler(CommandHandler("start", start))
         application.add_handler(MessageHandler(filters.CONTACT, contact_message))
