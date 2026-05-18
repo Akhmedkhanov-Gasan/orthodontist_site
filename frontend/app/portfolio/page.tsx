@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { apiBase, withSlash } from '@/utils/url';
 
-import LightboxImage from '../components/LightboxImage'
-
 export default function Portfolio() {
   const [works, setWorks] = useState<any[]>([]);
 
@@ -44,24 +42,19 @@ export default function Portfolio() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: index * 0.1 }}
-                        className="min-w-0 overflow-hidden bg-gray-50 p-8 rounded-lg"
+                        className="bg-gray-50 p-8 rounded-lg"
                     >
                       {work.image && (
                           <div className="aspect-square mb-4">
-                            <LightboxImage
-                              src={`${apiBase}${withSlash(work.image)}`}
-                              alt={work.title}
-                              wrapperClassName="h-full w-full"
-                              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                            <img
+                                src={`${apiBase}${withSlash(work.image)}`}
+                                alt={work.title}
+                                className="w-full h-full object-cover rounded-lg"
                             />
                           </div>
                       )}
-                      <h3 className="mb-2 break-words text-xl font-medium [overflow-wrap:anywhere]">
-                          {work.title}
-                        </h3>
-                      <p className="break-words text-gray-600 [overflow-wrap:anywhere]">
-                          {work.description}
-                        </p>
+                      <h3 className="text-xl font-medium mb-2">{work.title}</h3>
+                      <p className="text-gray-600">{work.description}</p>
                     </motion.div>
                 ))}
               </div>
