@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { apiBase, withSlash } from '@/utils/url';
 
-import LightboxImage from '../components/LightboxImage'
-
-
 export default function Services() {
   const [services, setServices] = useState<any[]>([]);
 
@@ -52,12 +49,11 @@ export default function Services() {
                           </p>
                       )}
                       {service.image && (
-                          <LightboxImage
+                          <img
                               src={`${apiBase}${withSlash(service.image)}`}
                               alt={service.title}
-                              wrapperClassName="w-full"
-                              className="h-auto w-full rounded-lg object-cover transition-transform duration-300 hover:scale-105"
-                            />
+                              className="rounded-lg w-full h-auto object-cover"
+                          />
                       )}
                     </motion.div>
                 ))}
