@@ -121,6 +121,8 @@ class HomePageAdmin(admin.ModelAdmin):
                 "footer_description",
                 "footer_copyright",
                 "footer_contacts",
+                "telegram_url",
+                "instagram_url",
             )
         }),
     )
