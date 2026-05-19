@@ -47,7 +47,7 @@ jobs:
             ${{ env.REGISTRY }}/ortho_backend:${{ github.sha }}
             ${{ env.REGISTRY }}/ortho_backend:prod
           cache-from: type=gha,scope=backend
-          cache-to: type=gha,scope=backend,mode=max
+          cache-to: type=gha,scope=backend,mode=min
 
   build-frontend:
     name: Build frontend image
@@ -75,7 +75,7 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.FRONTEND_API_URL }}
             NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
           cache-from: type=gha,scope=frontend
-          cache-to: type=gha,scope=frontend,mode=max
+          cache-to: type=gha,scope=frontend,mode=min
 
   build-gateway:
     name: Build gateway image
@@ -100,7 +100,7 @@ jobs:
             ${{ env.REGISTRY }}/ortho_gateway:${{ github.sha }}
             ${{ env.REGISTRY }}/ortho_gateway:prod
           cache-from: type=gha,scope=gateway
-          cache-to: type=gha,scope=gateway,mode=max
+          cache-to: type=gha,scope=gateway,mode=min
 
   deploy-containers:
     name: Deploy containers

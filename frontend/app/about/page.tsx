@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
 import { apiBase, withSlash } from '@/utils/url'
 
 interface TeamMember {
@@ -88,9 +87,6 @@ export default function About() {
     },
   ].filter((value) => value.title || value.description)
 
-  const hasTeamSection =
-    aboutData.team_title || aboutData.team_text || aboutData.team_members?.length > 0
-
   return (
     <div className="bg-white pt-32 pb-20">
       <div className="container mx-auto px-4">
@@ -145,36 +141,6 @@ export default function About() {
               ))}
             </div>
           </section>
-        )}
-
-        {hasTeamSection && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mx-auto max-w-3xl text-center"
-          >
-            {aboutData.team_title && (
-              <h2 className="mb-6 text-3xl font-light">
-                {aboutData.team_title}
-              </h2>
-            )}
-
-            {aboutData.team_text && (
-              <p className="mb-8 break-words text-lg leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
-                {aboutData.team_text}
-              </p>
-            )}
-
-            {aboutData.team_members?.length > 0 && (
-              <Link
-                href="/about/team"
-                className="inline-block rounded bg-gray-900 px-8 py-3 text-white transition-colors hover:bg-gray-800"
-              >
-                Смотреть команду
-              </Link>
-            )}
-          </motion.section>
         )}
       </div>
     </div>
