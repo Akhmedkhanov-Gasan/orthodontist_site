@@ -324,6 +324,18 @@ class HomePage(models.Model):
         verbose_name="Адрес и телефон",
         default="г. Москва, ул. Примерная, д. 1 | Тел: +7 (495) 123-45-67"
     )
+    telegram_url = models.URLField(
+        max_length=255,
+        verbose_name="Ссылка на Telegram",
+        blank=True,
+        default=""
+    )
+    instagram_url = models.URLField(
+        max_length=255,
+        verbose_name="Ссылка на Instagram",
+        blank=True,
+        default=""
+    )
 
     updated_at = models.DateTimeField(auto_now=True)
 
