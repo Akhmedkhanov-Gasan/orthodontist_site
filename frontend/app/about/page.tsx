@@ -1,114 +1,182 @@
-'use client';  // указываем, что это клиентский компонент
+'use client'
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { apiBase, withSlash } from '@/utils/url'
+
+interface TeamMember {
+  id: number
+  name: string
+  position: string
+  description: string
+  photo: string | null
+  work_start_date: string | null
+  experience_years: number | null
+  order: number
+  is_active: boolean
+}
 
 interface AboutPageData {
-  id: number;
-  title: string;
-  content: string;
-  image: string | null;
+  id: number
+  title: string
+  content: string
+  image: string | null
+
+  value_1_title: string
+  value_1_description: string
+  value_2_title: string
+  value_2_description: string
+  value_3_title: string
+  value_3_description: string
+
+  team_title: string
+  team_text: string
+  team_members: TeamMember[]
+
+  updated_at: string
 }
 
 export default function About() {
-  const [aboutData, setAboutData] = useState<AboutPageData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Твои статические данные (values и т.п.)
-  const values = [
-    {
-      title: "Профессионализм",
-      description: "Постоянное совершенствование навыков и применение передовых методик"
-    },
-    {
-      title: "Инновации",
-      description: "Использование современного оборудования и цифровых технологий"
-    },
-    {
-      title: "Забота",
-      description: "Индивидуальный подход и внимание к каждому пациенту"
-    }
-  ];
+  const [aboutData, setAboutData] = useState<AboutPageData | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Подставляем URL твоего бэка
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about/`)
-      .then((res) => res.json())
+    fetch(`${apiBase}/api/about/`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('About page content not found')
+        }
+
+        return res.json()
+      })
       .then((data) => {
-        setAboutData(data);
-        setLoading(false);
+        setAboutData(data)
       })
       .catch((err) => {
-        console.error('Error fetching about data:', err);
-        setLoading(false);
-      });
-  }, []);
+        console.error('Error fetching about data:', err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
 
   if (loading) {
-    return <p className="mt-32 text-center">Загрузка...</p>;
+    return <div className="min-h-screen bg-white" />
   }
 
-  // Если aboutData нет, будет "не найдена"
   if (!aboutData) {
-    return <p className="mt-32 text-center">Страница «О нас» не найдена.</p>;
+    return (
+      <div className="pt-40 text-center text-gray-600">
+        Страница «О нас» не настроена в админке.
+      </div>
+    )
   }
+
+  const values = [
+    {
+      title: aboutData.value_1_title,
+      description: aboutData.value_1_description,
+    },
+    {
+      title: aboutData.value_2_title,
+      description: aboutData.value_2_description,
+    },
+    {
+      title: aboutData.value_3_title,
+      description: aboutData.value_3_description,
+    },
+  ].filter((value) => value.title || value.description)
+
+  const hasTeamSection =
+    aboutData.team_title || aboutData.team_text || aboutData.team_members?.length > 0
 
   return (
-    <div className="pt-32 pb-20">
+    <div className="bg-white pt-32 pb-20">
       <div className="container mx-auto px-4">
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="mx-auto mb-16 max-w-4xl text-center"
         >
-          {/* Заголовок из бэка */}
-          <h1 className="text-4xl font-light mb-6">{aboutData.title}</h1>
-          {/* Основной текст из бэка */}
-          <p className="text-gray-600">
-            {aboutData.content}
-          </p>
-          {/* Если есть картинка - покажем */}
+          <h1 className="mb-6 text-4xl font-light">{aboutData.title}</h1>
+
+          {aboutData.content && (
+            <p className="mx-auto max-w-3xl break-words text-lg leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
+              {aboutData.content}
+            </p>
+          )}
+
           {aboutData.image && (
-            <div className="mt-8">
+            <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-lg bg-gray-100">
               <img
-                src={`${process.env.NEXT_PUBLIC_API_URL}${aboutData.image}`}
-                alt="About"
-                className="mx-auto rounded-lg"
+                src={`${apiBase}${withSlash(aboutData.image)}`}
+                alt=""
+                className="h-auto w-full"
               />
             </div>
           )}
-        </motion.div>
+        </motion.section>
 
-        {/* Блок статических values */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {values.map((value, index) => (
-            <motion.div
-              key={value.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="text-center"
-            >
-              <h3 className="text-xl font-medium mb-4">{value.title}</h3>
-              <p className="text-gray-600">{value.description}</p>
-            </motion.div>
-          ))}
-        </div>
+        {values.length > 0 && (
+          <section className="mb-20">
+            <div className="grid gap-8 md:grid-cols-3">
+              {values.map((value, index) => (
+                <motion.div
+                  key={`${value.title}-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.15 }}
+                  className="rounded-lg bg-gray-50 p-8 text-center"
+                >
+                  {value.title && (
+                    <h3 className="mb-4 text-xl font-medium">
+                      {value.title}
+                    </h3>
+                  )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-3xl mx-auto text-center"
-        >
-          <h2 className="text-2xl font-light mb-6">Наша команда</h2>
-          <p className="text-gray-600">
-            Наши специалисты регулярно проходят обучение и стажировки в ведущих 
-            клиниках мира, чтобы предоставлять вам лечение на высочайшем уровне.
-          </p>
-        </motion.div>
+                  {value.description && (
+                    <p className="break-words leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
+                      {value.description}
+                    </p>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {hasTeamSection && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            {aboutData.team_title && (
+              <h2 className="mb-6 text-3xl font-light">
+                {aboutData.team_title}
+              </h2>
+            )}
+
+            {aboutData.team_text && (
+              <p className="mb-8 break-words text-lg leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
+                {aboutData.team_text}
+              </p>
+            )}
+
+            {aboutData.team_members?.length > 0 && (
+              <Link
+                href="/about/team"
+                className="inline-block rounded bg-gray-900 px-8 py-3 text-white transition-colors hover:bg-gray-800"
+              >
+                Смотреть команду
+              </Link>
+            )}
+          </motion.section>
+        )}
       </div>
     </div>
-  );
+  )
 }

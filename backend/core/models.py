@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from filer.fields.image import FilerImageField
 
 
@@ -89,15 +90,71 @@ class Work(models.Model):
 class AboutPage(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Основной текст")
-    image = models.ImageField(
-        upload_to='about/',
-        blank=True,
+    image = FilerImageField(
         null=True,
+        blank=True,
+        related_name="about_page_images",
+        on_delete=models.SET_NULL,
         verbose_name="Картинка"
     )
+    value_1_title = models.CharField(
+        max_length=200,
+        verbose_name="Ценность 1 - заголовок",
+        blank=True,
+        default="Профессионализм",
+    )
+    value_1_description = models.TextField(
+        verbose_name="Ценность 1 - описание",
+        blank=True,
+        default="Постоянное совершенствование навыков и применение передовых методик",
+    )
+
+    value_2_title = models.CharField(
+        max_length=200,
+        verbose_name="Ценность 2 - заголовок",
+        blank=True,
+        default="Инновации",
+    )
+    value_2_description = models.TextField(
+        verbose_name="Ценность 2 - описание",
+        blank=True,
+        default="Использование современного оборудования и цифровых технологий",
+    )
+
+    value_3_title = models.CharField(
+        max_length=200,
+        verbose_name="Ценность 3 - заголовок",
+        blank=True,
+        default="Забота",
+    )
+    value_3_description = models.TextField(
+        verbose_name="Ценность 3 - описание",
+        blank=True,
+        default="Индивидуальный подход и внимание к каждому пациенту",
+    )
+
+    team_title = models.CharField(
+        max_length=200,
+        verbose_name="Команда - заголовок",
+        blank=True,
+        default="Наша команда",
+    )
+    team_text = models.TextField(
+        verbose_name="Команда - текст",
+        blank=True,
+        default="Наши специалисты регулярно проходят обучение и стажировки в ведущих клиниках мира, чтобы предоставлять вам лечение на высочайшем уровне.",
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "О нас (редактирование)"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AboutPage.objects.exists():
+            raise ValueError("Можно создать только одну страницу О нас")
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "О нас"
@@ -351,3 +408,59 @@ class HomePage(models.Model):
 
     def __str__(self):
         return "Главная страница"
+
+class TeamMember(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Имя"
+    )
+    position = models.CharField(
+        max_length=200,
+        verbose_name="Должность",
+        blank=True
+    )
+    description = models.TextField(
+        verbose_name="Описание",
+        blank=True
+    )
+    photo = FilerImageField(
+        null=True,
+        blank=True,
+        related_name="team_member_photos",
+        on_delete=models.SET_NULL,
+        verbose_name="Фото"
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Показывать на сайте"
+    )
+    work_start_date = models.DateField(
+        verbose_name="Дата начала работы",
+        blank=True,
+        null=True,
+    )
+
+    @property
+    def experience_years(self):
+        if not self.work_start_date:
+            return None
+
+        today = timezone.localdate()
+        years = today.year - self.work_start_date.year
+
+        if (today.month, today.day) < (self.work_start_date.month, self.work_start_date.day):
+            years -= 1
+
+        return max(years, 0)
+
+    class Meta:
+        verbose_name = "Сотрудник"
+        verbose_name_plural = "Сотрудники"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return self.name

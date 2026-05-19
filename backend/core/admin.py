@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from django.shortcuts import redirect
 from django.urls import reverse
 
+
 from .models import (
     Patient, PatientImage,
     Appointment,
@@ -10,6 +11,7 @@ from .models import (
     Work,
     AboutPage,
     HomePage,
+    TeamMember,
 )
 
 
@@ -78,8 +80,51 @@ class WorkAdmin(admin.ModelAdmin):
 
 @admin.register(AboutPage)
 class AboutPageAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ("title", "updated_at")
 
+    fieldsets = (
+        ("Основной блок", {
+            "fields": (
+                "title",
+                "content",
+                "image",
+            )
+        }),
+        ("Ценности", {
+            "fields": (
+                "value_1_title",
+                "value_1_description",
+                "value_2_title",
+                "value_2_description",
+                "value_3_title",
+                "value_3_description",
+            )
+        }),
+        ("Команда", {
+            "fields": (
+                "team_title",
+                "team_text",
+            )
+        }),
+    )
+
+    def has_add_permission(self, request):
+        if AboutPage.objects.exists():
+            return False
+
+        return super().has_add_permission(request)
+
+    def changelist_view(self, request, extra_context=None):
+        about_page = AboutPage.objects.first()
+
+        if about_page:
+            url = reverse(
+                "admin:core_aboutpage_change",
+                args=[about_page.pk],
+            )
+            return redirect(url)
+
+        return super().changelist_view(request, extra_context)
 
 @admin.register(HomePage)
 class HomePageAdmin(admin.ModelAdmin):
@@ -144,3 +189,18 @@ class HomePageAdmin(admin.ModelAdmin):
             return redirect(url)
 
         return super().changelist_view(request, extra_context)
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "position",
+        "work_start_date",
+        "experience_years",
+        "order",
+        "is_active",
+    )
+    list_editable = ("order", "is_active")
+    search_fields = ("name", "position")
+    list_filter = ("is_active",)
