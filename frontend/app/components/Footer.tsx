@@ -8,6 +8,8 @@ interface FooterData {
   footer_description: string
   footer_copyright: string
   footer_contacts: string
+  telegram_url: string
+  instagram_url: string
 }
 
 export default function Footer() {
@@ -38,6 +40,8 @@ export default function Footer() {
   const footerContacts =
     footerData?.footer_contacts ||
     'г. Москва, ул. Примерная, д. 1 | Тел: +7 (495) 123-45-67'
+  const telegramUrl = footerData?.telegram_url || ''
+  const instagramUrl = footerData?.instagram_url || ''
 
   return (
     <footer className="bg-gray-100 py-8">
@@ -48,10 +52,49 @@ export default function Footer() {
             <p className="text-sm text-gray-600">{footerDescription}</p>
           </div>
 
-          <div className="w-full md:w-auto text-center md:text-right">
-            <p className="text-sm text-gray-600">{footerCopyright}</p>
-            <p className="text-sm text-gray-600 mt-2">{footerContacts}</p>
-          </div>
+    <div className="w-full md:w-auto text-center md:text-right">
+  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-end">
+    <p className="text-sm text-gray-600">{footerCopyright}</p>
+
+    {(telegramUrl || instagramUrl) && (
+      <div className="flex items-center gap-3">
+        {telegramUrl && (
+          <a
+            href={telegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full transition-opacity hover:opacity-70"
+          >
+            <img
+              src="/icons/telegram.svg"
+              alt=""
+              className="h-9 w-9 object-contain"
+            />
+          </a>
+        )}
+
+        {instagramUrl && (
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full transition-opacity hover:opacity-70"
+          >
+            <img
+              src="/icons/instagram.svg"
+              alt=""
+              className="h-9 w-9 object-contain"
+            />
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+
+  <p className="text-sm text-gray-600 mt-2">{footerContacts}</p>
+</div>
         </div>
       </div>
     </footer>
