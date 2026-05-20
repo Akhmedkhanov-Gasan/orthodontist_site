@@ -31,18 +31,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare CI env file
+        run: cp .env.ci .env
+
       - name: Build backend test image
-        run: docker compose --env-file .env.ci build backend
+        run: docker compose build backend
 
       - name: Start test dependencies
-        run: docker compose --env-file .env.ci up -d db redis
+        run: docker compose up -d db redis
 
       - name: Run backend tests
-        run: docker compose --env-file .env.ci run --rm backend pytest
+        run: docker compose run --rm backend pytest
 
       - name: Stop test containers
         if: always()
-        run: docker compose --env-file .env.ci down -v
+        run: docker compose down -v
 
   frontend-checks:
     name: Frontend checks
