@@ -41,7 +41,10 @@ class AppointmentCreateView(APIView):
                     return Response({"detail": "reCAPTCHA failed"}, status=status.HTTP_400_BAD_REQUEST)
 
             serializer = AppointmentSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             obj = serializer.save()
             return Response(AppointmentSerializer(obj).data, status=status.HTTP_201_CREATED)
 
