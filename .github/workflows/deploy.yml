@@ -31,8 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepare CI env file
-        run: cp .env.ci .env
+      - name: Prepare CI env files
+        run: |
+          cp .env.ci .env
+          cp .env.frontend.example .env.frontend
 
       - name: Build backend test image
         run: docker compose build backend
