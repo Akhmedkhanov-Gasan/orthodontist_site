@@ -1,222 +1,400 @@
-```markdown
 # Orthodontist Site
 
-Full-stack website for an orthodontist with online appointment booking. 
-It includes a Next.js frontend, Django + DRF backend, PostgreSQL,
-and an Nginx gateway, all wired with Docker Compose and GitHub Actions CI/CD. 
-reCAPTCHA v3 and CSRF are enabled end-to-end.
+Full-stack website for an orthodontic clinic: public marketing pages, online appointment form, Django admin panel, media-backed content, Telegram bot, Docker deployment, and GitHub Actions CI/CD.
 
----
+## Stack
 
-## Features
-
-- Public pages: Services, Portfolio (Works), About.
-- Appointment form: name, phone, preferred date, comment.
-- Client & server validation:
-    - Phone regex: `^(?:\+7|8)\d{10}$`
-    - Preferred date cannot be in the past.
-- reCAPTCHA v3 (action: `appointment`) on the frontend + server-side verification.
-- CSRF protection (cookie + `X-CSRFToken` header).
-- Django Admin to manage:
-    - Appointments (statuses: `new`, `repeat`, `confirmed`, `done`, `canceled`)
-    - Services, Works, About content.
-- Health endpoints for monitoring.
-
----
-
-## Tech Stack
-
-- Frontend: Next.js (React), Framer Motion
-- Backend: Django, Django REST Framework
-- Database: PostgreSQL
-- Gateway: Nginx (reverse proxy; serves static/media)
-- CI/CD: GitHub Actions → Docker Hub → SSH deploy
-- Runtime: Docker / Docker Compose
-
----
+- Frontend: Next.js 14, React 18, TypeScript, Tailwind CSS, Framer Motion
+- Backend: Django 5.1, Django REST Framework
+- Database: PostgreSQL in Docker, SQLite for local Django settings
+- Media/Admin: django-filer, easy-thumbnails, django-grappelli
+- Bot: python-telegram-bot, Redis-backed runtime environment
+- Gateway: Nginx reverse proxy
+- CI/CD: GitHub Actions, Docker Hub, SSH deploy
+- Runtime: Docker Compose
 
 ## Repository Layout
 
+```text
+backend/                 Django project and DRF API
+frontend/                Next.js application
+nginx/                   Nginx reverse proxy image and config
+.github/workflows/       CI/CD pipeline
+.github/scripts/         Helper scripts
+media/                   Local media files, ignored in git
+others/                  Local auxiliary files, ignored in git
+docker-compose.yml       Local/prod service orchestration
+.env.ci                  CI environment template
+.env.frontend.example    Frontend environment example
 ```
 
-backend/                     # Django + DRF project (orthodontist\_site)
-frontend/                    # Next.js app
-nginx/                       # Gateway config and Dockerfile
-.github/workflows/ci.yml     # CI/CD pipeline
-docker-compose.yml           # Orchestration
+## Application Features
 
-````
+- Public pages:
+  - `/` - home page
+  - `/services` - services
+  - `/portfolio` - works / cases
+  - `/about` - about page
+  - `/about/team` - team page
+  - `/appointment` - appointment form
+- Dynamic content is managed through Django Admin.
+- Appointment form uses:
+  - client-side validation
+  - server-side DRF validation
+  - CSRF cookie and `X-CSRFToken`
+  - Google reCAPTCHA v3 with action `appointment`
+- Admin manages:
+  - homepage content
+  - about page content
+  - team members
+  - services
+  - works / portfolio
+  - appointments
+  - patients
+  - patient images
+- Telegram bot can:
+  - register a patient
+  - accept a phone number
+  - create an appointment request
+  - notify an admin chat when configured
+- Health endpoints are available for checks.
 
----
+## Backend API
 
-## API Overview
+All API routes are served under `/api/`.
 
-- `GET /api/services/` — list services  
-- `GET /api/works/` — list portfolio items  
-- `GET /api/about/` — get “About” page  
-- `GET /api/csrf/` — sets CSRF cookie (`csrftoken`)  
-- `POST /api/appointments/` — create appointment
+```text
+GET  /api/home/           Homepage content
+GET  /api/services/       Service list
+GET  /api/works/          Portfolio work list
+GET  /api/about/          About page with active team members
+GET  /api/csrf/           Set CSRF cookie
+GET  /api/ping/           Lightweight liveness check, returns pong
+GET  /api/health/         Database health check
+POST /api/appointments/   Create appointment
+```
 
-**Create appointment — request body (JSON):**
+### Appointment Request
+
 ```json
 {
-  "name": "Ivan",
-  "phone": "+71234567890",
-  "preferred_date": "2025-12-31",
+  "name": "Ivan Ivanov",
+  "phone": "+79991234567",
+  "preferred_date": "2026-05-25",
   "message": "Optional comment",
-  "recaptcha_token": "<token from grecaptcha.execute>"
+  "recaptcha_token": "token-from-grecaptcha"
 }
-````
-
-**cURL example:**
-
-```bash
-# 1) Get CSRF cookie
-curl -c cookies.txt https://<HOST>/api/csrf/
-
-# 2) POST with CSRF header + reCAPTCHA token
-curl -b cookies.txt \
-  -H "Content-Type: application/json" \
-  -H "X-CSRFToken: $(grep csrftoken cookies.txt | awk '{print $7}')" \
-  -d '{"name":"Ivan","phone":"+71234567890","preferred_date":"2025-12-31","message":"hi","recaptcha_token":"<token>"}' \
-  https://<HOST>/api/appointments/
 ```
 
-**Response codes:**
+Validation rules:
 
-* `201 Created` — appointment saved (returns created object)
-* `400 Bad Request` — validation errors or reCAPTCHA failed
+- `name` is stripped, normalized, and cannot be empty.
+- `phone` must match `+7XXXXXXXXXX` or `8XXXXXXXXXX`.
+- `preferred_date` cannot be in the past.
+- reCAPTCHA must pass unless `DISABLE_RECAPTCHA=1`.
 
----
+## Frontend Runtime
 
-## Frontend reCAPTCHA Flow
-
-* Load script:
-
-  ```
-  https://www.google.com/recaptcha/api.js?render=<NEXT_PUBLIC_RECAPTCHA_SITE_KEY>
-  ```
-* Execute on submit:
-
-  ```ts
-  const token = await grecaptcha.execute(siteKey, { action: 'appointment' });
-  ```
-* Send `token` as `recaptcha_token` in POST body.
-
-> Ensure your site domain is added in the reCAPTCHA console. The backend checks `action === "appointment"` and `score >= 0.5`.
-
----
-
-## Quick Start (Docker)
-
-1. Create a **`.env`** file in the repo root (see example below).
-2. Start services:
-
-   ```bash
-   docker compose up -d
-   ```
-3. Create a Django superuser if needed:
-
-   ```bash
-   docker exec -it ortho_backend python manage.py createsuperuser
-   ```
-4. Admin panel: `https://<HOST>/admin/`
-
-### Example `.env` (root)
+The frontend expects these public variables:
 
 ```env
-# PostgreSQL
+NEXT_PUBLIC_API_URL=https://your-domain.example
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_recaptcha_v3_site_key
+```
+
+`NEXT_PUBLIC_API_URL` is used for:
+
+- loading page content from DRF
+- loading media URLs
+- requesting `/api/csrf/`
+- submitting appointments
+
+In Docker Compose these values are read from `.env.frontend`.
+
+For local Next.js development, place equivalent values in `frontend/.env.local` or export them in the shell before running the dev server.
+
+## Backend Environment
+
+Production/Docker settings use `orthodontist_site.settings.docker`.
+
+Required variables:
+
+```env
 POSTGRES_DB=orthodb
 POSTGRES_USER=ortho_user
-POSTGRES_PASSWORD=ortho_password
+POSTGRES_PASSWORD=change-me
 DB_HOST=db
 DB_PORT=5432
 
-# Django
 SECRET_KEY=change-me
 DEBUG=False
-ALLOWED_HOSTS=your.domain,localhost,127.0.0.1
-CSRF_TRUSTED_ORIGINS=https://your.domain
-CORS_ALLOWED_ORIGINS=https://your.domain
-DJANGO_SETTINGS_MODULE=orthodontist_site.settings.docker
+ALLOWED_HOSTS=your-domain.example,localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=https://your-domain.example
+CORS_ALLOWED_ORIGINS=https://your-domain.example
 
-# reCAPTCHA (v3)
 RECAPTCHA_SECRET=your_recaptcha_v3_secret
+
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_ADMIN_CHAT_ID=
+TELEGRAM_PROXY_URL=
+REDIS_URL=redis://redis:6379/0
 ```
 
-### Frontend build args
+CI additionally uses:
 
-Provided at image build time (CI does this automatically):
+```env
+DISABLE_RECAPTCHA=1
+DJANGO_SETTINGS_MODULE=orthodontist_site.settings.docker
+```
 
-* `NEXT_PUBLIC_API_URL=https://your.domain`
-* `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_recaptcha_v3_site_key`
+## Docker Compose
 
----
+Services:
+
+```text
+db        PostgreSQL 13.10
+redis     Redis 7 Alpine
+backend   Django + Gunicorn on port 8000 inside the network
+frontend  Next.js on port 3000
+gateway   Nginx on 127.0.0.1:8080
+bot       Telegram bot using the backend image
+```
+
+Named volumes:
+
+```text
+pg_data   PostgreSQL data
+static    Django collected static files
+media     Uploaded media files
+```
+
+Start the full stack:
+
+```bash
+docker compose up -d --build
+```
+
+Apply migrations and collect static:
+
+```bash
+docker compose run --rm backend python manage.py migrate
+docker compose run --rm backend python manage.py collectstatic --noinput
+```
+
+Create admin user:
+
+```bash
+docker compose run --rm backend python manage.py createsuperuser
+```
+
+Open:
+
+```text
+Frontend through gateway: http://127.0.0.1:8080/
+Frontend direct:          http://localhost:3000/
+Admin:                    http://127.0.0.1:8080/admin/
+API:                      http://127.0.0.1:8080/api/
+```
+
+## Local Development
+
+Backend with local settings:
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate --settings=orthodontist_site.settings.local
+python manage.py runserver --settings=orthodontist_site.settings.local
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm ci --legacy-peer-deps
+npm run dev
+```
+
+Useful frontend checks:
+
+```bash
+npm run build
+npx tsc --noEmit
+```
+
+Backend tests:
+
+```bash
+cd backend
+pytest
+```
+
+Docker-based backend tests, matching CI more closely:
+
+```bash
+cp .env.ci .env
+cp .env.frontend.example .env.frontend
+docker compose build backend
+docker compose up -d db redis
+docker compose run --rm backend pytest
+docker compose down -v
+```
+
+## Nginx Routing
+
+The gateway listens on port `80` inside the container and is published as `127.0.0.1:8080` by Compose.
+
+Routes:
+
+```text
+/admin/   -> backend:8000/admin/
+/api/     -> backend:8000/api/
+/media/   -> media volume
+/static/  -> static volume
+/         -> frontend:3000
+```
 
 ## CI/CD
 
-* **Selective builds:** Only services with changes are rebuilt (via `dorny/paths-filter`).
-* **Tags:** Images are pushed with the commit SHA and also with a stable `:prod` tag.
-* **Manual deploys:** You can use the “Run workflow” button to redeploy `:prod` images without rebuilding.
-* **Deploy job:** Runs over SSH on the server:
+The pipeline is defined in `.github/workflows/deploy.yml`.
 
-    * Exports `TAG` (commit SHA or `prod`)
-    * Runs `/srv/jml/deploy.sh` → `docker compose pull` + `up -d --remove-orphans` → prune old images.
+Triggers:
 
----
+- push to `main`
+- manual `workflow_dispatch`
 
-## Useful Production Commands
+Pipeline stages:
 
-Check that the backend sees the reCAPTCHA secret:
+1. Preflight checkout and deployment target logging.
+2. Backend tests:
+   - copies `.env.ci` to `.env`
+   - copies `.env.frontend.example` to `.env.frontend`
+   - builds backend image
+   - starts `db` and `redis`
+   - runs `pytest` in Docker Compose
+3. Frontend checks:
+   - installs dependencies with `npm ci --legacy-peer-deps`
+   - runs `npx tsc --noEmit`
+   - runs production build with frontend secrets
+4. Docker image builds:
+   - backend image: `agasan/ortho_backend:<sha>` and `agasan/ortho_backend:prod`
+   - frontend image: `agasan/ortho_frontend:<sha>` and `agasan/ortho_frontend:prod`
+   - gateway image: `agasan/ortho_gateway:<sha>` and `agasan/ortho_gateway:prod`
+5. Server deploy over SSH:
+   - goes to `/home/gasan/orthodontist_site`
+   - fetches `origin/main`
+   - resets server repo to `origin/main`
+   - pulls backend, frontend, and gateway images
+   - runs Django migrations
+   - runs `collectstatic`
+   - restarts backend, frontend, gateway, and bot
+   - checks gateway container status
 
-```bash
-docker exec ortho_backend python -c "import os; from django.conf import settings; \
-print('ENV secret?', bool(os.getenv('RECAPTCHA_SECRET'))); \
-print('SETTINGS secret?', bool(getattr(settings,'RECAPTCHA_SECRET','')))"
+Required GitHub secrets:
+
+```text
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+FRONTEND_API_URL
+RECAPTCHA_SITE_KEY
+SERVER_IP
+SSH_USER
+SSH_KEY
 ```
 
-Inspect effective Django `docker.py` settings inside the container:
+## Telegram Bot
 
-```bash
-docker exec ortho_backend sh -lc \
-"python -c 'import importlib; m=importlib.import_module(\"orthodontist_site.settings.docker\"); print(open(m.__file__).read())'"
+The bot runs as a separate Compose service:
+
+```text
+bot -> agasan/ortho_backend:prod -> python manage.py runbot
 ```
 
-Tail backend logs (Gunicorn/Django):
+Required for bot startup:
+
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token
+```
+
+Optional:
+
+```env
+TELEGRAM_ADMIN_CHAT_ID=admin_chat_id
+TELEGRAM_PROXY_URL=socks_or_http_proxy
+```
+
+The bot uses polling and supports:
+
+```text
+/start
+/register
+/appointment
+/contacts
+/info
+```
+
+## Production Notes
+
+- Uploaded media is stored in the shared `media` Docker volume and served by Nginx.
+- Static files are collected into the shared `static` Docker volume and served by Nginx.
+- reCAPTCHA v3 must be configured for the production domain.
+- `CSRF_TRUSTED_ORIGINS` and `CORS_ALLOWED_ORIGINS` must include the real frontend origin.
+- `DISABLE_RECAPTCHA=1` should only be used in CI or local testing.
+- The workflow currently rebuilds all three deployable images on each `main` push.
+
+## Useful Commands
+
+Check running containers:
+
+```bash
+docker compose ps
+```
+
+Backend logs:
 
 ```bash
 docker logs -f ortho_backend
 ```
 
----
+Frontend logs:
 
-## reCAPTCHA v3 Troubleshooting
+```bash
+docker logs -f ortho_frontend
+```
 
-If you see `400 {"detail":"reCAPTCHA failed"}`:
+Gateway logs:
 
-1. Token missing on backend
-   Logs may show: `reCAPTCHA: missing token or secret`
+```bash
+docker logs -f ortho_nginx
+```
 
-    * Ensure frontend sends `recaptcha_token`.
-    * Confirm `RECAPTCHA_SECRET` is present in the container and in Django settings.
+Bot logs:
 
-2. Wrong domain or site/secret keys
+```bash
+docker logs -f ortho_bot
+```
 
-    * Add your domain to the reCAPTCHA admin console.
-    * Verify you’re using v3 keys (site key on frontend, secret key on backend).
+Run migrations:
 
-3. Action / score mismatch
+```bash
+docker compose run --rm --no-deps backend python manage.py migrate
+```
 
-    * The backend checks `result.action == "appointment"` and `score >= 0.5`.
+Collect static:
 
-4. Network issues to Google verify endpoint
+```bash
+docker compose run --rm --no-deps backend python manage.py collectstatic --noinput
+```
 
-    * Backend must reach `https://www.google.com/recaptcha/api/siteverify`.
+Check backend health through gateway:
 
----
+```bash
+curl http://127.0.0.1:8080/api/ping/
+curl http://127.0.0.1:8080/api/health/
+```
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-
-
+No license file is currently included in the repository.
