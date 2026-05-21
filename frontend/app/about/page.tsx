@@ -4,18 +4,6 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { apiBase, withSlash } from '@/utils/url'
 
-interface TeamMember {
-  id: number
-  name: string
-  position: string
-  description: string
-  photo: string | null
-  work_start_date: string | null
-  experience_years: number | null
-  order: number
-  is_active: boolean
-}
-
 interface AboutPageData {
   id: number
   title: string
@@ -28,10 +16,6 @@ interface AboutPageData {
   value_2_description: string
   value_3_title: string
   value_3_description: string
-
-  team_title: string
-  team_text: string
-  team_members: TeamMember[]
 
   updated_at: string
 }
@@ -88,56 +72,62 @@ export default function About() {
   ].filter((value) => value.title || value.description)
 
   return (
-    <div className="bg-white pt-32 pb-20">
+    <div className="bg-white pt-28 pb-8">
       <div className="container mx-auto px-4">
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mx-auto mb-16 max-w-4xl text-center"
+          className="mx-auto mb-10 max-w-7xl"
         >
-          <h1 className="mb-6 text-4xl font-light">{aboutData.title}</h1>
+          <div
+            className={`grid items-center gap-10 rounded-lg bg-gray-50/70 p-8 md:p-10 lg:p-12 ${
+              aboutData.image ? 'lg:grid-cols-[1.05fr_0.95fr]' : ''
+            }`}
+          >
+            {aboutData.image && (
+              <div className="overflow-hidden rounded-lg bg-white shadow-sm">
+                <img
+                  src={`${apiBase}${withSlash(aboutData.image)}`}
+                  alt=""
+                  className="aspect-[4/3] w-full object-cover object-center"
+                />
+              </div>
+            )}
 
-          {aboutData.content && (
-            <p className="mx-auto max-w-3xl break-words text-lg leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
-              {aboutData.content}
-            </p>
-          )}
+            <div className={aboutData.image ? 'text-left' : 'text-center'}>
+              <h1 className="mb-6 text-4xl font-light text-gray-950">
+                {aboutData.title}
+              </h1>
 
-          {aboutData.image && (
-            <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-lg bg-gray-100">
-              <img
-                src={`${apiBase}${withSlash(aboutData.image)}`}
-                alt=""
-                className="h-auto w-full"
-              />
+              {aboutData.content && (
+                <p className="max-w-xl break-words text-lg leading-8 text-gray-600 [overflow-wrap:anywhere]">
+                  {aboutData.content}
+                </p>
+              )}
             </div>
-          )}
+          </div>
         </motion.section>
 
         {values.length > 0 && (
-          <section className="mb-20">
+          <section className="pt-40 pb-8 md:pt-48 md:pb-10">
             <div className="grid gap-8 md:grid-cols-3">
               {values.map((value, index) => (
                 <motion.div
-                  key={`${value.title}-${index}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.15 }}
-                  className="rounded-lg bg-gray-50 p-8 text-center"
-                >
-                  {value.title && (
-                    <h3 className="mb-4 text-xl font-medium">
-                      {value.title}
-                    </h3>
-                  )}
+  key={`${value.title}-${index}`}
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: index * 0.2 }}
+  className="rounded-lg bg-gray-50 p-8"
+>
+  {value.title && (
+    <h3 className="mb-4 text-xl font-medium">{value.title}</h3>
+  )}
 
-                  {value.description && (
-                    <p className="break-words leading-relaxed text-gray-600 [overflow-wrap:anywhere]">
-                      {value.description}
-                    </p>
-                  )}
-                </motion.div>
+  {value.description && (
+    <p className="text-gray-600">{value.description}</p>
+  )}
+</motion.div>
               ))}
             </div>
           </section>

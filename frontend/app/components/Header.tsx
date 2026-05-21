@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +18,17 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+const isActive = (href: string) => pathname === href
+
+const navLinkClass = (href: string) =>
+  `rounded border px-4 py-2 transition-colors ${
+    isActive(href)
+      ? 'border-gray-900 bg-gray-900 text-white'
+      : 'border-transparent text-gray-900 hover:border-gray-300 hover:text-gray-600'
+  }`
+
+const appointmentClass = navLinkClass('/appointment')
 
   return (
     <header
@@ -43,10 +56,10 @@ export default function Header() {
               isOpen ? 'flex' : 'hidden'
             } w-full flex-col items-center md:flex md:w-auto md:flex-row`}
           >
-            <div className="flex flex-col items-center space-y-4 text-sm md:flex-row md:space-x-8 md:space-y-0">
+            <div className="flex flex-col items-center gap-1 text-sm md:flex-row md:gap-1">
               <Link
                 href="/"
-                className="transition-colors hover:text-gray-600"
+                className={navLinkClass('/')}
                 onClick={() => setIsOpen(false)}
               >
                 Главная
@@ -54,7 +67,7 @@ export default function Header() {
 
               <Link
                 href="/about"
-                className="transition-colors hover:text-gray-600"
+                className={navLinkClass('/about')}
                 onClick={() => setIsOpen(false)}
               >
                 О нас
@@ -62,7 +75,7 @@ export default function Header() {
 
               <Link
                 href="/about/team"
-                className="transition-colors hover:text-gray-600"
+                className={navLinkClass('/about/team')}
                 onClick={() => setIsOpen(false)}
               >
                 Команда
@@ -70,7 +83,7 @@ export default function Header() {
 
               <Link
                 href="/portfolio"
-                className="transition-colors hover:text-gray-600"
+                className={navLinkClass('/portfolio')}
                 onClick={() => setIsOpen(false)}
               >
                 Наши работы
@@ -78,7 +91,7 @@ export default function Header() {
 
               <Link
                 href="/appointment"
-                className="rounded bg-gray-900 px-6 py-2 text-white transition-colors hover:bg-gray-800"
+                className={appointmentClass}
                 onClick={() => setIsOpen(false)}
               >
                 Запись на прием
