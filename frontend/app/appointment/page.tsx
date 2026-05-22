@@ -44,7 +44,6 @@ export default function Appointment() {
           process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
           { action: 'appointment' }
       );
-      console.log('reCAPTCHA token len:', token?.length, 'head:', token?.slice(0, 12));
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments/`, {
         method: 'POST',
@@ -116,6 +115,7 @@ export default function Appointment() {
                     type="text"
                     title="Введите имя"
                     required
+                    min={new Date().toISOString().split('T')[0]}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-gray-900"
